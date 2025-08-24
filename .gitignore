@@ -196,9 +196,3 @@ Thumbs.db
 # MAS-Bench specific
 masbench-resources/
 MAS-Bench.jar
-
-# Claude Code and AI tools
-CLAUDE.md
-.serena/
-.claude/
-.benchmarks/

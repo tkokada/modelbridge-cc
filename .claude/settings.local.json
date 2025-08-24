@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(source:*)",
+      "Bash(python:*)",
+      "Bash(ruff check:*)",
+      "Bash(make check-all:*)",
+      "Bash(ruff format:*)",
+      "Bash(mypy:*)",
+      "Bash(uv pip install:*)",
+      "Bash(pyright:*)",
+      "Bash(/dev/null)",
+      "Bash(make:*)",
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(uv run ruff:*)",
+      "Bash(uv sync:*)",
+      "Bash(uv run:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [
+      "Bash(rm:*)",
+      "Bash(sudo:*)",
+      "Read(.env.*)"
+    ],
+    "ask": [
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}
