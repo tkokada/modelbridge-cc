@@ -12,12 +12,13 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.12", "3.13"]
-
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
     steps:
     - uses: actions/checkout@v4
     
     - name: Install uv
-      uses: astral-sh/setup-uv@v4
+      uses: astral-sh/setup-uv@v6
       with:
         version: "latest"
     
@@ -25,12 +26,7 @@ jobs:
       run: uv python install ${{ matrix.python-version }}
     
     - name: Install dependencies
-      run: |
-        if [ "${{ matrix.python-version }}" = "3.13" ]; then
-          uv sync --dev
-        else
-          uv sync --all-extras --dev
-        fi
+      run: uv sync --locked --all-extras --dev
     
     - name: Lint with ruff
       run: |
@@ -45,8 +41,6 @@ jobs:
         uv run mypy modelbridge/
     
     - name: Test with pytest
-      env:
-        PYTHONPATH: ${{ github.workspace }}
       run: |
         uv run pytest --cov=modelbridge --cov-report=xml --cov-report=term-missing
     
