@@ -23,7 +23,7 @@ jobs:
     
     - name: Install core dependencies only
       run: |
-        uv sync --dev --no-install-project
+        uv sync --dev
     
     - name: Lint with ruff
       run: |

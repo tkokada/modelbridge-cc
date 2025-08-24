@@ -55,7 +55,7 @@ examples = [
     "torchvision>=0.15.0",
 ]
 all = [
-    "GPy>=1.10.0",
+    "GPy>=1.10.0;python_version<'3.13'",
     "torch>=2.0.0",
     "torchvision>=0.15.0",
     "pytest>=6.0",
