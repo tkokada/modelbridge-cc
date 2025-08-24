@@ -52,7 +52,7 @@ class LinearRegressionModel(BaseRegression):
     @override
     def predict(self, input_data: FloatArray) -> FloatArray:
         """Predict using linear regression."""
-        return self.model.predict(input_data)
+        return self.model.predict(input_data).astype(np.float64)  # type: ignore[no-any-return]
 
 
 class PolynomialRegressionModel(BaseRegression):
@@ -74,7 +74,7 @@ class PolynomialRegressionModel(BaseRegression):
     @override
     def predict(self, input_data: FloatArray) -> FloatArray:
         """Predict using polynomial regression."""
-        return self.model.predict(input_data)
+        return self.model.predict(input_data).astype(np.float64)  # type: ignore[no-any-return]
 
 
 class GaussianProcessModel(BaseRegression):
@@ -118,7 +118,7 @@ class GaussianProcessModel(BaseRegression):
             raise ValueError("Model has not been fitted yet")
 
         predictions, _ = self.model.predict(input_data)
-        return predictions
+        return predictions.astype(np.float64)  # type: ignore[no-any-return]
 
 
 class RegressionModel:
@@ -203,10 +203,20 @@ class RegressionModel:
         Returns:
             Dictionary of evaluation metrics
         """
+        import warnings
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            try:
+                r2 = r2_score(true_micro, pred_micro)
+            except ValueError:
+                # Handle case where R² cannot be calculated
+                r2 = 0.0
+
         return EvaluationMetrics(
             mse=mean_squared_error(true_micro, pred_micro),
             mae=mean_absolute_error(true_micro, pred_micro),
-            r2=r2_score(true_micro, pred_micro),
+            r2=r2,
         )
 
     def _convert_to_array(

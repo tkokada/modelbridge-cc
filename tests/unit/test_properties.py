@@ -1,6 +1,5 @@
 """Property-based tests using Hypothesis for ModelBridge components."""
 
-
 from hypothesis import assume, given, settings
 from hypothesis import strategies as st
 import numpy as np
@@ -89,7 +88,9 @@ class TestDataManagerProperties:
         n_params=st.integers(min_value=1, max_value=5),
     )
     @settings(max_examples=5)
-    def test_array_param_conversion_roundtrip(self, n_samples: int, n_params: int) -> None:
+    def test_array_param_conversion_roundtrip(
+        self, n_samples: int, n_params: int
+    ) -> None:
         """Test roundtrip conversion between arrays and parameter dictionaries."""
         dm = DataManager()
 
@@ -126,12 +127,12 @@ class TestRegressionModelProperties:
         model = LinearRegressionModel()
 
         # Generate random data
-        X = np.random.randn(n_samples, n_features).astype(np.float64)
+        x = np.random.randn(n_samples, n_features).astype(np.float64)
         y = np.random.randn(n_samples, n_targets).astype(np.float64)
 
         # Fit and predict
-        model.fit(X, y)
-        predictions = model.predict(X)
+        model.fit(x, y)
+        predictions = model.predict(x)
 
         # Property: prediction shape matches target shape
         assert predictions.shape == y.shape
@@ -151,11 +152,11 @@ class TestRegressionModelProperties:
         """Test polynomial regression with different degrees."""
         model = PolynomialRegressionModel(degree=degree)
 
-        X = np.random.randn(n_samples, n_features).astype(np.float64)
+        x = np.random.randn(n_samples, n_features).astype(np.float64)
         y = np.random.randn(n_samples, 1).astype(np.float64)
 
-        model.fit(X, y)
-        predictions = model.predict(X)
+        model.fit(x, y)
+        predictions = model.predict(x)
 
         # Property: can fit and predict without errors
         assert predictions.shape == y.shape
@@ -211,9 +212,7 @@ class TestConfigLoaderProperties:
         dm = DataManager()
 
         params = {"test_param": param_value}
-        scaling_config = {
-            "test_param": {"scale": scale_factor, "offset": offset}
-        }
+        scaling_config = {"test_param": {"scale": scale_factor, "offset": offset}}
 
         scaled = dm.scale_parameters(params, scaling_config)
 

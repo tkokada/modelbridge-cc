@@ -248,7 +248,9 @@ class MNISTSklearnBridge:
             for i, params in enumerate(bridge.train_macro_params):  # type: ignore[attr-defined]
                 h = params["macro_hidden_size"]
                 alpha, lr = params["macro_alpha"], params["learning_rate"]
-                print(f"  Scenario {i + 1}: [{h}] neurons, alpha={alpha:.4f}, lr={lr:.5f}")
+                print(
+                    f"  Scenario {i + 1}: [{h}] neurons, alpha={alpha:.4f}, lr={lr:.5f}"
+                )
 
         return metrics
 

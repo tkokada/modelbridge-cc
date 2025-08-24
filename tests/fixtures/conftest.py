@@ -52,11 +52,14 @@ def sample_param_list() -> ParamList:
 @pytest.fixture
 def sample_float_array() -> FloatArray:
     """Sample float array for testing."""
-    return np.array([
-        [1.0, 2.0, 0.5, 1.5],
-        [-1.0, 1.5, 0.8, 1.2],
-        [0.5, -2.0, 1.0, 0.6],
-    ], dtype=np.float64)
+    return np.array(
+        [
+            [1.0, 2.0, 0.5, 1.5],
+            [-1.0, 1.5, 0.8, 1.2],
+            [0.5, -2.0, 1.0, 0.6],
+        ],
+        dtype=np.float64,
+    )
 
 
 @pytest.fixture
@@ -144,6 +147,39 @@ def macro_objective() -> Any:
 def random_seed() -> int:
     """Fixed random seed for reproducible tests."""
     return 42
+
+
+@pytest.fixture
+def simple_micro_objective() -> Any:
+    """Simple quadratic micro objective for testing."""
+
+    def objective(params: ParamDict) -> float:
+        x = params["x"]
+        p = params["p"]
+        return float(p * x**2)
+
+    return objective
+
+
+@pytest.fixture
+def simple_macro_objective() -> Any:
+    """Simple linear macro objective for testing."""
+
+    def objective(params: ParamDict, target_value: float) -> float:
+        x = params["x"]
+        p = params["p"]
+        return float(p * x)
+
+    return objective
+
+
+@pytest.fixture
+def simple_param_config() -> ParamConfig:
+    """Simple parameter configuration for testing."""
+    return {
+        "x": {"type": "float", "low": -2.0, "high": 2.0},
+        "p": {"type": "float", "low": 0.1, "high": 2.0},
+    }
 
 
 @pytest.fixture(autouse=True)

@@ -1,6 +1,5 @@
 """Unit tests for type definitions and type safety."""
 
-
 import numpy as np
 
 from modelbridge.types import (
@@ -48,10 +47,7 @@ class TestTypeDefinitions:
 
         # Can create with all fields
         full_config = StudyConfigDict(
-            storage="sqlite:///test.db",
-            direction="minimize",
-            sampler="tpe",
-            seed=42
+            storage="sqlite:///test.db", direction="minimize", sampler="tpe", seed=42
         )
         assert full_config["direction"] == "minimize"
 
@@ -65,7 +61,7 @@ class TestTypeDefinitions:
         }
 
         assert isinstance(params, dict)
-        assert all(isinstance(v, (int, float, str, bool)) for v in params.values())
+        assert all(isinstance(v, int | float | str | bool) for v in params.values())
 
     def test_param_list_type_alias(self) -> None:
         """Test ParamList type alias usage."""

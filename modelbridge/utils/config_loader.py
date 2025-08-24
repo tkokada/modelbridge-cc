@@ -91,6 +91,6 @@ def create_param_config(
     ):
         if param_type not in ("float", "int"):
             raise ValueError(f"Invalid parameter type: {param_type}")
-        config[name] = ParamConfigValue(type=param_type, low=low, high=high)  # type: ignore[misc]
+        config[name] = ParamConfigValue(type=param_type, low=low, high=high)  # type: ignore[typeddict-item]
 
     return config

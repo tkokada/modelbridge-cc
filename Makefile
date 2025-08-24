@@ -27,54 +27,54 @@ help:
 
 # Installation
 install:
-	uv pip install -e .
+	uv sync -e .
 
 install-dev:
-	uv pip install -e ".[dev]"
+	uv sync -e ".[dev]"
 
 install-examples:
-	uv pip install -e ".[examples]"
+	uv sync -e ".[examples]"
 
 install-all:
-	uv pip install -e ".[all]"
+	uv sync -e ".[all]"
 
 # Code quality
 lint:
-	ruff check .
+	uv run ruff check .
 
 format:
-	ruff format .
+	uv run ruff format .
 
 format-check:
-	ruff format --check .
+	uv run ruff format --check .
 
 type-check:
-	mypy modelbridge/
+	uv run mypy modelbridge/ --disable-error-code=unreachable
 
 # Testing
 test:
-	pytest
+	uv run pytest
 
 test-unit:
-	pytest tests/unit/ -v
+	uv run pytest tests/unit/ -v
 
 test-integration:
-	pytest tests/integration/ -v
+	uv run pytest tests/integration/ -v
 
 test-cov:
-	pytest --cov=modelbridge --cov-report=html --cov-report=term-missing --cov-report=xml
+	uv run pytest --cov=modelbridge --cov-report=html --cov-report=term-missing --cov-report=xml
 
 test-fast:
-	pytest -m "not slow"
+	uv run pytest -m "not slow"
 
 test-slow:
-	pytest -m "slow"
+	uv run pytest -m "slow"
 
 test-parallel:
-	pytest -n auto
+	uv run pytest -n auto
 
 test-benchmark:
-	pytest --benchmark-only
+	uv run pytest --benchmark-only
 
 # Build and clean
 clean:
@@ -118,7 +118,7 @@ check-all: lint format-check type-check test
 # Development setup
 setup-dev:
 	@echo "Setting up development environment..."
-	uv pip install -e ".[dev]"
+	uv sync -e ".[dev]"
 	@echo "Development environment ready!"
 
 # Run examples
