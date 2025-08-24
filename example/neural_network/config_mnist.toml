@@ -1,0 +1,44 @@
+[experiment]
+name = "mnist_neural_bridge"
+description = "Model bridge between CNN (micro) and MLP (macro) on MNIST"
+
+[dataset]
+name = "MNIST"
+subset_size = 500  # Small subset for fast execution
+train_test_split = 0.8
+
+[models]
+micro_type = "CNN"
+macro_type = "MLP"
+
+[training]
+epochs = 2
+batch_size = 32
+early_stop_batches = 10  # Stop after 10 batches for speed
+
+[optimization]
+n_train_scenarios = 3
+n_test_scenarios = 2
+micro_trials_per_scenario = 3
+macro_trials_per_scenario = 3
+
+[parameters.micro]
+# CNN parameters
+dropout_rate = { min = 0.1, max = 0.8 }
+hidden_size = { min = 64, max = 256 }
+learning_rate = { min = 0.0001, max = 0.01 }
+
+[parameters.macro] 
+# MLP parameters
+macro_hidden_size = { min = 16, max = 128 }
+macro_dropout_rate = { min = 0.1, max = 0.6 }
+learning_rate = { min = 0.0001, max = 0.01 }
+
+[regression]
+type = "polynomial"
+degree = 2
+
+[output]
+results_dir = "outputs/examples/neural_network"
+save_plots = true
+save_models = false  # Don't save trained models to save space

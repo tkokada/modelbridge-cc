@@ -1,0 +1,40 @@
+[generic]
+debug = false
+seed = 42
+
+[dataset]
+max_x = 5.0
+min_x = -5.0
+max_x_dim = 3
+nx_train = 10
+nx_test = 10
+n_train = 5
+n_test = 3
+
+[macro_model]
+macro_function_name = "sphere"
+macro_max_param = 1.0
+macro_min_param = 0.0
+macro_param_prefix = "a"
+
+[micro_model]
+micro_function_name = "rastrigin"
+micro_max_param = 1.0
+micro_min_param = 0.0
+micro_param_prefix = "b"
+
+[optuna]
+storage = "sqlite:///outputs/databases/simple_benchmark.db"
+direction = "minimize"
+sampler_name = "tpe"
+
+[plot]
+plot_title_train = "Training Data - Parameter Relationships"
+plot_title_test = "Test Data - Parameter Relationships"
+plot_title_bridge = "Model Bridge Predictions"
+plot_path_train = "outputs/plots/simple_benchmark/train_plot.png"
+plot_path_test = "outputs/plots/simple_benchmark/test_plot.png"
+plot_path_bridge = "outputs/plots/simple_benchmark/bridge_plot.png"
+
+[regression]
+regression_model_name = "polynomial"
