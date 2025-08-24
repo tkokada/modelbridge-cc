@@ -220,4 +220,4 @@ directory = "outputs/reports/htmlcov"
 output = "coverage.xml"
 
 [tool.uv.pip]
-all-binary = ["scipy"]
+only-binary = ["scipy"]
