@@ -138,7 +138,7 @@ class TestExampleUsageScenarios:
         import time
 
         # Use unique storage to avoid conflicts with other tests
-        unique_id = f"{n_train}_{n_test}_{int(time.time()*1000)}"
+        unique_id = f"{n_train}_{n_test}_{int(time.time() * 1000)}"
         with tempfile.TemporaryDirectory() as temp_dir:
             storage_path = f"sqlite:///{temp_dir}/test_{unique_id}.db"
 
@@ -175,7 +175,9 @@ class TestExampleUsageScenarios:
         import time
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            storage_path = f"sqlite:///{temp_dir}/test_zero_{int(time.time()*1000)}.db"
+            storage_path = (
+                f"sqlite:///{temp_dir}/test_zero_{int(time.time() * 1000)}.db"
+            )
 
             bridge = ModelBridge(
                 micro_objective=simple_micro_objective,
@@ -222,7 +224,9 @@ class TestExampleUsageScenarios:
         import time
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            storage_path = f"sqlite:///{temp_dir}/test_high_dim_{int(time.time()*1000)}.db"
+            storage_path = (
+                f"sqlite:///{temp_dir}/test_high_dim_{int(time.time() * 1000)}.db"
+            )
 
             bridge = ModelBridge(
                 micro_objective=high_dim_micro,
@@ -257,7 +261,9 @@ class TestExampleUsageScenarios:
         import time
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            storage_path = f"sqlite:///{temp_dir}/test_perf_{int(time.time()*1000)}.db"
+            storage_path = (
+                f"sqlite:///{temp_dir}/test_perf_{int(time.time() * 1000)}.db"
+            )
 
             bridge = ModelBridge(
                 micro_objective=simple_micro_objective,
