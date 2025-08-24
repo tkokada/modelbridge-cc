@@ -16,7 +16,15 @@ jobs:
       UV_PYTHON: ${{ matrix.python-version }}
     steps:
     - uses: actions/checkout@v4
-    
+
+    - name: Update apt cache
+      run: |
+        sudo apt-get update
+
+    - name: Install libopenblas-dev
+      run: |
+        sudo apt-get install -y libopenblas-dev
+
     - name: Install uv
       uses: astral-sh/setup-uv@v6
       with:
