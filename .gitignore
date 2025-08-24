@@ -196,3 +196,6 @@ Thumbs.db
 # MAS-Bench specific
 masbench-resources/
 MAS-Bench.jar
+
+# Claude
+CLAUDE.md
