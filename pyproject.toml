@@ -219,4 +219,4 @@ precision = 2
 directory = "outputs/reports/htmlcov"
 
 [tool.coverage.xml]
-output = "outputs/reports/coverage.xml"
+output = "coverage.xml"
