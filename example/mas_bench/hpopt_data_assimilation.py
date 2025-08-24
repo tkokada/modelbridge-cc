@@ -36,7 +36,9 @@ class MASBenchSimulator:
         """
         script_path = f"masbench-resources/Dataset/{model}/agent_size.sh"
         if not os.path.exists(script_path):
-            print(f"agent_size.sh not found at: {script_path}")
+            print(f"❌ ERROR: agent_size.sh not found at: {script_path}")
+            print("💡 This example requires MAS-Bench simulation resources.")
+            print("📚 For a working example, try: python simple_mas_example.py")
             sys.exit(1)
 
         shell_script = (
@@ -54,9 +56,26 @@ class MASBenchSimulator:
             result_path: Path to store results
             input_csv: Path to input CSV file
         """
-        subprocess.run(
-            ["java", "-jar", self.jar_path, model, result_path, input_csv], check=True
-        )
+        try:
+            subprocess.run(
+                ["java", "-jar", self.jar_path, model, result_path, input_csv],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=30,  # 30 second timeout
+            )
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Simulation failed: {e}")
+            if e.stderr:
+                print(f"Error output: {e.stderr}")
+            return False
+        except subprocess.TimeoutExpired:
+            print("Simulation timed out after 30 seconds")
+            return False
+        except Exception as e:
+            print(f"Unexpected simulation error: {e}")
+            return False
 
     def save_input_parameters(
         self,
@@ -78,7 +97,11 @@ class MASBenchSimulator:
 
         with open(input_csv, "w", newline="") as f:
             writer = csv.writer(f)
-            writer.writeheader()
+            # csv.writer doesn't have writeheader(), so we write header manually
+            header = []
+            for i in range(total_agents):
+                header.extend([f"sigma_{i}", f"mu_{i}", f"pi_{i}"])
+            writer.writerow(header)
             writer.writerow(row)
 
     def extract_fitness_score(
@@ -246,11 +269,17 @@ class MASBenchBridge:
 
             # Run simulation
             try:
-                self.simulator.run_simulation(self.model, result_path, input_csv)
-                fitness = self.simulator.extract_fitness_score(
-                    result_path, trial_id, output_path
+                simulation_success = self.simulator.run_simulation(
+                    self.model, result_path, input_csv
                 )
-                return fitness
+                if simulation_success:
+                    fitness = self.simulator.extract_fitness_score(
+                        result_path, trial_id, output_path
+                    )
+                    return fitness
+                else:
+                    print(f"Simulation failed for trial {trial_id}")
+                    return float("inf")
             except Exception as e:
                 print(f"Simulation failed: {e}")
                 return float("inf")
@@ -360,7 +389,7 @@ class MASBenchBridge:
             macro_param_config=self.param_config,
             regression_type="polynomial",
             optimizer_config={
-                "storage": "sqlite:///outputs/databases/mas_bench.db",
+                "storage": "sqlite:///mas_bench_results.db",
                 "direction": "minimize",
                 "sampler": "random",
                 "seed": seed,
@@ -379,7 +408,7 @@ class MASBenchBridge:
             micro_trials_per_dataset=50,
             macro_trials_per_dataset=50,
             visualize=True,
-            output_dir=f"outputs/examples/mas_bench/Bridge-{micro_model}-{macro_model}",
+            output_dir=f"mas_bench_results/Bridge-{micro_model}-{macro_model}",
         )
 
         return metrics
