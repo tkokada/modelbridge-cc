@@ -248,10 +248,10 @@ class TestModelBridgeIntegration:
 
         import tempfile
         import time
-        
+
         with tempfile.TemporaryDirectory() as temp_dir:
             storage_path = f"sqlite:///{temp_dir}/test_regtype_{regression_type}_{int(time.time()*1000)}.db"
-            
+
             bridge = ModelBridge(
                 micro_objective=simple_micro_objective,
                 macro_objective=simple_macro_objective,
