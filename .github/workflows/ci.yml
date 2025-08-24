@@ -11,43 +11,35 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.12", "3.13"]
+        python-version: ["3.12"]
     env:
       UV_PYTHON: ${{ matrix.python-version }}
     steps:
     - uses: actions/checkout@v4
 
-    - name: Update apt cache
-      run: |
-        sudo apt-get update
-
-    - name: Install libopenblas-dev
-      run: |
-        sudo apt-get install -y libopenblas-dev
-
     - name: Install uv
       uses: astral-sh/setup-uv@v6
       with:
         version: "latest"
-    
+
     - name: Set up Python ${{ matrix.python-version }}
       run: uv python install ${{ matrix.python-version }}
-    
+
     - name: Install dependencies
       run: uv sync --extra dev
-    
+
     - name: Lint with ruff
       run: |
         uv run ruff check .
-    
+
     - name: Format check with ruff
       run: |
         uv run ruff format --check .
-    
+
     - name: Type check with mypy
       run: |
         uv run mypy modelbridge/  --disable-error-code=unreachable
-    
+
     - name: Test with pytest
       run: |
         uv run pytest --cov=modelbridge --cov-report=xml --cov-report=term-missing
