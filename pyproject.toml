@@ -25,17 +25,17 @@ classifiers = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "numpy>=1.24.0",
-    "pandas>=2.0.0",
-    "matplotlib>=3.6.0",
-    "scikit-learn>=1.3.0",
-    "optuna>=3.0.0",
-    "toml>=0.10.0",
+    "GPy",
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "scikit-learn",
+    "optuna",
+    "toml",
     "scipy"
 ]
 
 [project.optional-dependencies]
-gpy = ["GPy"]
 dev = [
     "pytest>=6.0",
     "pytest-cov",
