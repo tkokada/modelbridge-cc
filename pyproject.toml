@@ -220,6 +220,4 @@ directory = "outputs/reports/htmlcov"
 output = "coverage.xml"
 
 [tool.uv.pip]
-only-binary = ["GPy", "scipy", "numpy", "pandas", "scikit-learn"]
-no-build-isolation = false
-index-strategy = "unsafe-first-match"
+only-binary = ["scipy"]
