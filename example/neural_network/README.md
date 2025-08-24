@@ -5,7 +5,7 @@ This example demonstrates model bridging between different neural network archit
 ## Overview
 
 - **Micro Model**: 2-layer MLP with more neurons (higher accuracy, slower training)
-- **Macro Model**: 1-layer MLP with fewer neurons (lower accuracy, faster training) 
+- **Macro Model**: 1-layer MLP with fewer neurons (lower accuracy, faster training)
 - **Dataset**: MNIST handwritten digits (subset for fast execution)
 - **Goal**: Predict optimal micro model hyperparameters using macro model optimization
 
@@ -51,7 +51,7 @@ python mnist_model_bridge.py --demo
 - **Range**: 32-128 neurons (layer 1), 16-64 neurons (layer 2)
 - **Training**: More epochs, early stopping enabled
 
-### Macro Model (1-layer MLP)  
+### Macro Model (1-layer MLP)
 - **Hidden layers**: 1 layer with configurable size
 - **Parameters**: `macro_hidden_size`, `macro_alpha`, `learning_rate`
 - **Range**: 16-64 neurons, faster training
@@ -59,7 +59,7 @@ python mnist_model_bridge.py --demo
 
 ## Model Bridge Process
 
-1. **Training Phase**: 
+1. **Training Phase**:
    - Train micro model (2-layer MLP) on different MNIST subsets
    - Train macro model (1-layer MLP) on same subsets
    - Learn regression mapping: macro params → micro params

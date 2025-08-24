@@ -19,6 +19,10 @@ help:
 	@echo "  clean          - Clean build artifacts"
 	@echo "  build          - Build the package"
 	@echo "  check-all      - Run all checks (lint, format, type-check, test)"
+	@echo "  pre-commit-install - Install pre-commit hooks"
+	@echo "  pre-commit-run     - Run pre-commit on all files"
+	@echo "  pre-commit-update  - Update pre-commit hook versions"
+	@echo "  setup-dev      - Set up complete development environment"
 	@echo "  clean-outputs  - Clean all output files"
 	@echo "  clean-examples - Clean example outputs only"
 	@echo "  clean-reports  - Clean development reports only"
@@ -115,11 +119,23 @@ build:
 # Combined checks
 check-all: lint format-check type-check test
 
+# Pre-commit hooks
+pre-commit-install:
+	uv run pre-commit install
+
+pre-commit-run:
+	uv run pre-commit run --all-files
+
+pre-commit-update:
+	uv run pre-commit autoupdate
+
 # Development setup
 setup-dev:
 	@echo "Setting up development environment..."
 	uv sync -e ".[dev]"
+	uv run pre-commit install
 	@echo "Development environment ready!"
+	@echo "Pre-commit hooks installed! Code quality checks will run automatically on commit."
 
 # Run examples
 run-simple-example:

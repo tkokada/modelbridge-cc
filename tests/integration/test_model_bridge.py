@@ -32,6 +32,7 @@ class TestModelBridgeIntegration:
         """Simple linear macro objective for testing."""
 
         def objective(params: ParamDict, target_value: float) -> float:
+            _ = target_value  # Suppress unused parameter warning
             x = params["x"]
             p = params["p"]
             return float(p * x)

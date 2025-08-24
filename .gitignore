@@ -197,6 +197,30 @@ Thumbs.db
 masbench-resources/
 MAS-Bench.jar
 
-# Claude
+# Development and temporary files
 CLAUDE.md
 CLAUDE.local.md
+.python-version
+.envrc
+
+# Type stubs (generated automatically)
+**/*.pyi
+
+# Package manager locks (for library - don't commit locks)
+uv.lock
+poetry.lock
+Pipfile.lock
+
+# Security
+.secrets
+.env.local
+.env.*.local
+
+# Open source software files (development-only)
+LICENSE
+CONTRIBUTING.md
+CHANGELOG.md
+SECURITY.md
+MANIFEST.in
+.github/ISSUE_TEMPLATE.md
+.github/PULL_REQUEST_TEMPLATE.md

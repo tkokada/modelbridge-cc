@@ -32,6 +32,7 @@ class TestExampleUsageScenarios:
 
         def linear_macro(params: ParamDict, target_value: float) -> float:
             """Linear macro approximation."""
+            _ = target_value  # Suppress unused parameter warning
             x = np.array([params["x_0"], params["x_1"]])
             p = np.array([params["p_0"], params["p_1"]])
             return float(np.sum(p * x))
@@ -216,6 +217,7 @@ class TestExampleUsageScenarios:
             return float(np.sum(p * x**2))
 
         def high_dim_macro(params: ParamDict, target_value: float) -> float:
+            _ = target_value  # Suppress unused parameter warning
             x = np.array([params[f"x_{i}"] for i in range(5)])
             p = np.array([params[f"p_{i}"] for i in range(5)])
             return float(np.sum(p * x))

@@ -17,7 +17,8 @@
       "Bash(uv sync:*)",
       "Bash(uv run:*)",
       "Bash(git add:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(uv build:*)"
     ],
     "deny": [
       "Bash(rm:*)",

@@ -9,10 +9,22 @@ description = "A library for hyperparameter optimization and model bridging betw
 readme = "README.md"
 license = { text = "MIT" }
 authors = [
-    { name = "Claude Code", email = "claude@anthropic.com" }
+    { name = "ModelBridge Contributors" }
+]
+maintainers = [
+    { name = "ModelBridge Contributors" }
+]
+keywords = [
+    "optimization",
+    "hyperparameter-tuning",
+    "machine-learning",
+    "model-bridging",
+    "optuna",
+    "regression",
+    "scientific-computing"
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
@@ -22,6 +34,8 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 requires-python = ">=3.12"
 dependencies = [
@@ -70,9 +84,11 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-username/claude-modelbridge"
-Issues = "https://github.com/your-username/claude-modelbridge/issues"
-Repository = "https://github.com/your-username/claude-modelbridge.git"
+Homepage = "https://github.com/tkokada/modelbridge"
+Documentation = "https://github.com/tkokada/modelbridge#readme"
+Repository = "https://github.com/tkokada/modelbridge.git"
+Issues = "https://github.com/tkokada/modelbridge/issues"
+Changelog = "https://github.com/tkokada/modelbridge/blob/main/CHANGELOG.md"
 
 # Ruff configuration for linting and formatting
 [tool.ruff]
@@ -186,7 +202,7 @@ asyncio_default_fixture_loop_scope = "function"
 filterwarnings = [
     "ignore::ResourceWarning:GPy.*",
     "ignore::sklearn.exceptions.UndefinedMetricWarning",
-    "ignore::numpy.RankWarning", 
+    "ignore::numpy.RankWarning",
     "ignore:.*degrees of freedom.*:RuntimeWarning",
     "ignore:.*divide by zero encountered.*:RuntimeWarning",
     "ignore:.*invalid value encountered.*:RuntimeWarning",
