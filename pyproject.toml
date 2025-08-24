@@ -218,3 +218,6 @@ directory = "outputs/reports/htmlcov"
 
 [tool.coverage.xml]
 output = "coverage.xml"
+
+[tool.uv.pip]
+all-binary = ["scipy"]
