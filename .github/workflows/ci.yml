@@ -45,6 +45,8 @@ jobs:
         uv run mypy modelbridge/
     
     - name: Test with pytest
+      env:
+        PYTHONPATH: ${{ github.workspace }}
       run: |
         uv run pytest --cov=modelbridge --cov-report=xml --cov-report=term-missing
     
