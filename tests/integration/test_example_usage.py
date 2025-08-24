@@ -134,27 +134,35 @@ class TestExampleUsageScenarios:
         n_test: int,
     ) -> None:
         """Test pipeline with different train/test splits."""
-        bridge = ModelBridge(
-            micro_objective=simple_micro_objective,
-            macro_objective=simple_macro_objective,
-            micro_param_config=simple_param_config,
-            macro_param_config=simple_param_config,
-            regression_type="linear",
-            optimizer_config={"seed": 42},
-        )
+        import tempfile
+        import time
+        
+        # Use unique storage to avoid conflicts with other tests
+        unique_id = f"{n_train}_{n_test}_{int(time.time()*1000)}"
+        with tempfile.TemporaryDirectory() as temp_dir:
+            storage_path = f"sqlite:///{temp_dir}/test_{unique_id}.db"
+            
+            bridge = ModelBridge(
+                micro_objective=simple_micro_objective,
+                macro_objective=simple_macro_objective,
+                micro_param_config=simple_param_config,
+                macro_param_config=simple_param_config,
+                regression_type="linear",
+                optimizer_config={"seed": 42, "storage": storage_path},
+            )
 
-        metrics = bridge.run_full_pipeline(
-            n_train=n_train,
-            n_test=n_test,
-            micro_trials_per_dataset=5,
-            macro_trials_per_dataset=5,
-            visualize=False,
-        )
+            _ = bridge.run_full_pipeline(
+                n_train=n_train,
+                n_test=n_test,
+                micro_trials_per_dataset=5,
+                macro_trials_per_dataset=5,
+                visualize=False,
+            )
 
-        assert len(bridge.train_micro_params) == n_train
-        assert len(bridge.train_macro_params) == n_train
-        assert len(bridge.test_micro_params) == n_test
-        assert len(bridge.test_macro_params) == n_test
+            assert len(bridge.train_micro_params) == n_train
+            assert len(bridge.train_macro_params) == n_train
+            assert len(bridge.test_micro_params) == n_test
+            assert len(bridge.test_macro_params) == n_test
 
     def test_zero_test_datasets(
         self,
@@ -163,27 +171,33 @@ class TestExampleUsageScenarios:
         simple_param_config: ParamConfig,
     ) -> None:
         """Test pipeline with zero test datasets."""
-        bridge = ModelBridge(
-            micro_objective=simple_micro_objective,
-            macro_objective=simple_macro_objective,
-            micro_param_config=simple_param_config,
-            macro_param_config=simple_param_config,
-            regression_type="linear",
-            optimizer_config={"seed": 42},
-        )
+        import tempfile
+        import time
+        
+        with tempfile.TemporaryDirectory() as temp_dir:
+            storage_path = f"sqlite:///{temp_dir}/test_zero_{int(time.time()*1000)}.db"
+            
+            bridge = ModelBridge(
+                micro_objective=simple_micro_objective,
+                macro_objective=simple_macro_objective,
+                micro_param_config=simple_param_config,
+                macro_param_config=simple_param_config,
+                regression_type="linear",
+                optimizer_config={"seed": 42, "storage": storage_path},
+            )
 
-        metrics = bridge.run_full_pipeline(
-            n_train=2,
-            n_test=0,
-            micro_trials_per_dataset=5,
-            macro_trials_per_dataset=5,
-            visualize=False,
-        )
+            metrics = bridge.run_full_pipeline(
+                n_train=2,
+                n_test=0,
+                micro_trials_per_dataset=5,
+                macro_trials_per_dataset=5,
+                visualize=False,
+            )
 
-        # Should return zero metrics when no test data
-        assert metrics["mse"] == 0.0
-        assert metrics["mae"] == 0.0
-        assert metrics["r2"] == 0.0
+            # Should return zero metrics when no test data
+            assert metrics["mse"] == 0.0
+            assert metrics["mae"] == 0.0
+            assert metrics["r2"] == 0.0
 
     def test_high_dimensional_parameters(self) -> None:
         """Test with higher dimensional parameter space."""
@@ -204,26 +218,32 @@ class TestExampleUsageScenarios:
             p = np.array([params[f"p_{i}"] for i in range(5)])
             return float(np.sum(p * x))
 
-        bridge = ModelBridge(
-            micro_objective=high_dim_micro,
-            macro_objective=high_dim_macro,
-            micro_param_config=param_config,
-            macro_param_config=param_config,
-            regression_type="linear",
-            optimizer_config={"seed": 42},
-        )
+        import tempfile
+        import time
+        
+        with tempfile.TemporaryDirectory() as temp_dir:
+            storage_path = f"sqlite:///{temp_dir}/test_high_dim_{int(time.time()*1000)}.db"
+            
+            bridge = ModelBridge(
+                micro_objective=high_dim_micro,
+                macro_objective=high_dim_macro,
+                micro_param_config=param_config,
+                macro_param_config=param_config,
+                regression_type="linear",
+                optimizer_config={"seed": 42, "storage": storage_path},
+            )
 
-        metrics = bridge.run_full_pipeline(
-            n_train=2,
-            n_test=1,
-            micro_trials_per_dataset=8,
-            macro_trials_per_dataset=8,
-            visualize=False,
-        )
+            metrics = bridge.run_full_pipeline(
+                n_train=2,
+                n_test=1,
+                micro_trials_per_dataset=8,
+                macro_trials_per_dataset=8,
+                visualize=False,
+            )
 
-        assert isinstance(metrics, dict)
-        assert bridge.predicted_micro_params is not None
-        assert bridge.predicted_micro_params.shape[1] == 10  # 10 parameters
+            assert isinstance(metrics, dict)
+            assert bridge.predicted_micro_params is not None
+            assert bridge.predicted_micro_params.shape[1] == 10  # 10 parameters
 
     @pytest.mark.slow
     def test_performance_benchmark(
@@ -233,29 +253,33 @@ class TestExampleUsageScenarios:
         simple_param_config: ParamConfig,
     ) -> None:
         """Performance benchmark test (marked as slow)."""
+        import tempfile
         import time
 
-        bridge = ModelBridge(
-            micro_objective=simple_micro_objective,
-            macro_objective=simple_macro_objective,
-            micro_param_config=simple_param_config,
-            macro_param_config=simple_param_config,
-            regression_type="linear",
-            optimizer_config={"seed": 42},
-        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            storage_path = f"sqlite:///{temp_dir}/test_perf_{int(time.time()*1000)}.db"
+            
+            bridge = ModelBridge(
+                micro_objective=simple_micro_objective,
+                macro_objective=simple_macro_objective,
+                micro_param_config=simple_param_config,
+                macro_param_config=simple_param_config,
+                regression_type="linear",
+                optimizer_config={"seed": 42, "storage": storage_path},
+            )
 
-        start_time = time.time()
+            start_time = time.time()
 
-        metrics = bridge.run_full_pipeline(
-            n_train=5,
-            n_test=3,
-            micro_trials_per_dataset=20,
-            macro_trials_per_dataset=20,
-            visualize=False,
-        )
+            metrics = bridge.run_full_pipeline(
+                n_train=5,
+                n_test=3,
+                micro_trials_per_dataset=20,
+                macro_trials_per_dataset=20,
+                visualize=False,
+            )
 
-        elapsed_time = time.time() - start_time
+            elapsed_time = time.time() - start_time
 
-        # Basic performance check (should complete within reasonable time)
-        assert elapsed_time < 60.0  # Should complete within 1 minute
-        assert isinstance(metrics, dict)
+            # Basic performance check (should complete within reasonable time)
+            assert elapsed_time < 60.0  # Should complete within 1 minute
+            assert isinstance(metrics, dict)

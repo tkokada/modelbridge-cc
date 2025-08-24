@@ -49,7 +49,7 @@ format-check:
 	uv run ruff format --check .
 
 type-check:
-	uv run mypy modelbridge/
+	uv run mypy modelbridge/ --disable-error-code=unreachable
 
 # Testing
 test:

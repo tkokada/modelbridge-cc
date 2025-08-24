@@ -19,19 +19,23 @@ class TestModelBridgeIntegration:
     @pytest.fixture
     def simple_micro_objective(self) -> Any:
         """Simple quadratic micro objective for testing."""
+
         def objective(params: ParamDict) -> float:
             x = params["x"]
             p = params["p"]
             return float(p * x**2)
+
         return objective
 
     @pytest.fixture
     def simple_macro_objective(self) -> Any:
         """Simple linear macro objective for testing."""
+
         def objective(params: ParamDict, target_value: float) -> float:
             x = params["x"]
             p = params["p"]
             return float(p * x)
+
         return objective
 
     @pytest.fixture
@@ -139,9 +143,9 @@ class TestModelBridgeIntegration:
                 },
             )
 
-            metrics = bridge.run_full_pipeline(
-                n_train=2,
-                n_test=1,
+            _ = bridge.run_full_pipeline(
+                n_train=3,
+                n_test=2,
                 micro_trials_per_dataset=5,
                 macro_trials_per_dataset=5,
                 visualize=True,
@@ -206,7 +210,9 @@ class TestModelBridgeIntegration:
             regression_type="linear",
         )
 
-        with pytest.raises(ValueError, match="Must complete training phase before testing"):
+        with pytest.raises(
+            ValueError, match="Must complete training phase before testing"
+        ):
             bridge.test_phase(n_test=1)
 
     def test_visualize_before_training_fails(
@@ -224,7 +230,9 @@ class TestModelBridgeIntegration:
             regression_type="linear",
         )
 
-        with pytest.raises(ValueError, match="Must complete training and testing before visualization"):
+        with pytest.raises(
+            ValueError, match="Must complete training and testing before visualization"
+        ):
             bridge.visualize_results()
 
     @pytest.mark.parametrize("regression_type", ["linear", "polynomial"])
@@ -238,26 +246,32 @@ class TestModelBridgeIntegration:
         """Test pipeline with different regression types."""
         regression_config = {"degree": 2} if regression_type == "polynomial" else {}
 
-        bridge = ModelBridge(
-            micro_objective=simple_micro_objective,
-            macro_objective=simple_macro_objective,
-            micro_param_config=simple_param_config,
-            macro_param_config=simple_param_config,
-            regression_type=regression_type,  # type: ignore[arg-type]
-            optimizer_config={"seed": 42},
-            regression_config=regression_config,
-        )
+        import tempfile
+        import time
+        
+        with tempfile.TemporaryDirectory() as temp_dir:
+            storage_path = f"sqlite:///{temp_dir}/test_regtype_{regression_type}_{int(time.time()*1000)}.db"
+            
+            bridge = ModelBridge(
+                micro_objective=simple_micro_objective,
+                macro_objective=simple_macro_objective,
+                micro_param_config=simple_param_config,
+                macro_param_config=simple_param_config,
+                regression_type=regression_type,  # type: ignore[arg-type]
+                optimizer_config={"seed": 42, "storage": storage_path},
+                regression_config=regression_config,
+            )
 
-        metrics = bridge.run_full_pipeline(
-            n_train=2,
-            n_test=1,
-            micro_trials_per_dataset=5,
-            macro_trials_per_dataset=5,
-            visualize=False,
-        )
+            metrics = bridge.run_full_pipeline(
+                n_train=2,
+                n_test=1,
+                micro_trials_per_dataset=5,
+                macro_trials_per_dataset=5,
+                visualize=False,
+            )
 
-        assert isinstance(metrics, dict)
-        assert bridge._is_trained
+            assert isinstance(metrics, dict)
+            assert bridge._is_trained
 
     def test_invalid_regression_type(
         self,

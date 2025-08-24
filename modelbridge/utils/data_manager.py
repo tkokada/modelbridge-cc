@@ -2,7 +2,6 @@
 
 import csv
 from pathlib import Path
-from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -144,7 +143,7 @@ class DataManager:
 
     def scale_parameters(
         self, params: ParamDict | ParamList, scaling_config: ScalingConfig
-    ) -> Any:  # Return type depends on input type
+    ) -> ParamDict | ParamList:
         """Apply scaling to parameters.
 
         Args:
@@ -156,24 +155,42 @@ class DataManager:
         Returns:
             Scaled parameters
         """
-        is_single = isinstance(params, dict)
-        param_list = [params] if is_single else params
-
-        scaled_params = []
-        for param_dict in param_list:
-            scaled_dict = {}
-            for param_name, value in param_dict.items():
+        if isinstance(params, dict):
+            # Handle single dictionary case
+            scaled_dict: ParamDict = {}
+            for param_name, value in params.items():
                 if param_name in scaling_config:
                     config = scaling_config[param_name]
-                    scaled_value = value * config.get("scale", 1.0) + config.get(
-                        "offset", 0.0
-                    )
-                    scaled_dict[param_name] = scaled_value
+                    if isinstance(value, int | float):
+                        scaled_value = float(
+                            value * config.get("scale", 1.0) + config.get("offset", 0.0)
+                        )
+                        scaled_dict[param_name] = scaled_value
+                    else:
+                        scaled_dict[param_name] = value
                 else:
                     scaled_dict[param_name] = value
-            scaled_params.append(scaled_dict)
-
-        return scaled_params[0] if is_single else scaled_params
+            return scaled_dict
+        else:
+            # Handle list of dictionaries case
+            scaled_params: ParamList = []
+            for param_dict in params:
+                scaled_dict = {}
+                for param_name, value in param_dict.items():
+                    if param_name in scaling_config:
+                        config = scaling_config[param_name]
+                        if isinstance(value, int | float):
+                            scaled_value = float(
+                                value * config.get("scale", 1.0)
+                                + config.get("offset", 0.0)
+                            )
+                            scaled_dict[param_name] = scaled_value
+                        else:
+                            scaled_dict[param_name] = value
+                    else:
+                        scaled_dict[param_name] = value
+                scaled_params.append(scaled_dict)
+            return scaled_params
 
     def generate_variable_dataset(
         self,

@@ -15,7 +15,7 @@ class MockObjectiveFunction:
 
     def __init__(self, function_type: str = "quadratic", noise_level: float = 0.0):
         """Initialize mock objective function.
-        
+
         Args:
             function_type: Type of function ("quadratic", "linear", "sine")
             noise_level: Amount of noise to add to function output
@@ -57,7 +57,7 @@ class MockMacroObjectiveFunction:
 
     def __init__(self, approximation_type: str = "linear"):
         """Initialize mock macro objective function.
-        
+
         Args:
             approximation_type: Type of approximation ("linear", "constant")
         """
@@ -86,7 +86,9 @@ class MockMacroObjectiveFunction:
 
 def create_test_param_config(n_params: int) -> ParamConfig:
     """Create a test parameter configuration with specified number of parameters."""
-    param_names = [f"x_{i}" for i in range(n_params // 2)] + [f"p_{i}" for i in range(n_params // 2)]
+    param_names = [f"x_{i}" for i in range(n_params // 2)] + [
+        f"p_{i}" for i in range(n_params // 2)
+    ]
     if n_params % 2 == 1:
         param_names.append("extra_param")
 
@@ -94,6 +96,8 @@ def create_test_param_config(n_params: int) -> ParamConfig:
     param_ranges = [(-2.0, 2.0)] * (n_params // 2) + [(0.1, 2.0)] * (n_params // 2)
     if n_params % 2 == 1:
         param_ranges.append((0.0, 1.0))
+
+    from modelbridge.utils.config_loader import create_param_config
 
     return create_param_config(param_names, param_types, param_ranges)
 
@@ -139,7 +143,9 @@ class StudyMocker:
                 if config["type"] == "float":
                     trial.suggest_float(param_name, config["low"], config["high"])
                 else:
-                    trial.suggest_int(param_name, int(config["low"]), int(config["high"]))
+                    trial.suggest_int(
+                        param_name, int(config["low"]), int(config["high"])
+                    )
 
             # Mock objective value
             objective_value = float(i + np.random.random())
@@ -174,7 +180,9 @@ class ParameterValidator:
             )
 
     @staticmethod
-    def validate_param_list(param_list: list[ParamDict], param_config: ParamConfig) -> None:
+    def validate_param_list(
+        param_list: list[ParamDict], param_config: ParamConfig
+    ) -> None:
         """Validate that parameter list conforms to configuration."""
         assert len(param_list) > 0, "Parameter list should not be empty"
 
@@ -186,7 +194,9 @@ class ArrayValidator:
     """Utility for validating numpy arrays."""
 
     @staticmethod
-    def validate_float_array(array: FloatArray, expected_shape: tuple[int, ...] | None = None) -> None:
+    def validate_float_array(
+        array: FloatArray, expected_shape: tuple[int, ...] | None = None
+    ) -> None:
         """Validate that array is a proper float array."""
         assert isinstance(array, np.ndarray)
         assert array.dtype == np.float64

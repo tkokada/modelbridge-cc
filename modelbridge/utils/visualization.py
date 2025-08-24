@@ -166,8 +166,14 @@ class Visualizer:
             ax.legend()
 
             # Calculate and display R²
-            correlation = np.corrcoef(true_values[:, i], predicted_values[:, i])[0, 1]
-            r_squared = correlation**2
+            import warnings
+
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", RuntimeWarning)
+                correlation = np.corrcoef(true_values[:, i], predicted_values[:, i])[
+                    0, 1
+                ]
+                r_squared = correlation**2 if not np.isnan(correlation) else 0.0
             ax.text(
                 0.05,
                 0.95,
@@ -335,12 +341,18 @@ class Visualizer:
                 ax.grid(True, alpha=0.3)
 
                 # Add R² score
-                if row == 0:
-                    r2 = np.corrcoef(train_target[:, i], train_pred[:, i])[0, 1] ** 2
-                    ax.set_title(f"Train - {param_names[i]} (R² = {r2:.3f})")
-                else:
-                    r2 = np.corrcoef(test_target[:, i], test_pred[:, i])[0, 1] ** 2
-                    ax.set_title(f"Test - {param_names[i]} (R² = {r2:.3f})")
+                import warnings
+
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", RuntimeWarning)
+                    if row == 0:
+                        corr = np.corrcoef(train_target[:, i], train_pred[:, i])[0, 1]
+                        r2 = corr**2 if not np.isnan(corr) else 0.0
+                        ax.set_title(f"Train - {param_names[i]} (R² = {r2:.3f})")
+                    else:
+                        corr = np.corrcoef(test_target[:, i], test_pred[:, i])[0, 1]
+                        r2 = corr**2 if not np.isnan(corr) else 0.0
+                        ax.set_title(f"Test - {param_names[i]} (R² = {r2:.3f})")
 
         plt.suptitle(title, fontsize=16)
         plt.tight_layout()

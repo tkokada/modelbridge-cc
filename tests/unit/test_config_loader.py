@@ -34,7 +34,7 @@ class TestLoadTomlConfig:
 
     def test_load_invalid_toml(self) -> None:
         """Test loading invalid TOML raises ValueError."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.toml', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".toml", delete=False) as f:
             f.write("invalid toml content [[[")
             invalid_path = Path(f.name)
 
@@ -73,7 +73,9 @@ class TestValidateConfig:
             "key2": int,  # Missing in config
         }
 
-        with pytest.raises(ValueError, match="Required configuration key missing: key2"):
+        with pytest.raises(
+            ValueError, match="Required configuration key missing: key2"
+        ):
             validate_config(config, required_keys)
 
     def test_validate_wrong_type(self) -> None:
@@ -114,7 +116,9 @@ class TestCreateParamConfig:
         param_types = ["float"]  # Wrong length
         param_ranges = [(-1.0, 1.0), (0.0, 2.0)]
 
-        with pytest.raises(ValueError, match="Parameter specification lists must have equal lengths"):
+        with pytest.raises(
+            ValueError, match="Parameter specification lists must have equal lengths"
+        ):
             create_param_config(param_names, param_types, param_ranges)
 
     def test_create_config_invalid_type(self) -> None:

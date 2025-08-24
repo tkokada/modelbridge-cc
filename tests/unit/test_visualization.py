@@ -27,10 +27,7 @@ class TestVisualizer:
 
     @pytest.mark.parametrize("save_to_file", [True, False])
     def test_plot_parameter_relationship(
-        self,
-        sample_float_array: FloatArray,
-        temp_directory: Path,
-        save_to_file: bool
+        self, sample_float_array: FloatArray, temp_directory: Path, save_to_file: bool
     ) -> None:
         """Test parameter relationship plotting."""
         viz = Visualizer()
@@ -44,7 +41,7 @@ class TestVisualizer:
 
         output_dir = str(temp_directory) if save_to_file else None
 
-        with patch('matplotlib.pyplot.show') as mock_show:
+        with patch("matplotlib.pyplot.show") as mock_show:
             viz.plot_parameter_relationship(
                 macro_params,
                 micro_params,
@@ -52,7 +49,7 @@ class TestVisualizer:
                 micro_names,
                 title="Test Relationships",
                 output_dir=output_dir,
-                filename="test_relationships.png"
+                filename="test_relationships.png",
             )
 
         if save_to_file:
@@ -66,10 +63,7 @@ class TestVisualizer:
 
     @pytest.mark.parametrize("save_to_file", [True, False])
     def test_plot_prediction_accuracy(
-        self,
-        sample_float_array: FloatArray,
-        temp_directory: Path,
-        save_to_file: bool
+        self, sample_float_array: FloatArray, temp_directory: Path, save_to_file: bool
     ) -> None:
         """Test prediction accuracy plotting."""
         viz = Visualizer()
@@ -81,14 +75,14 @@ class TestVisualizer:
         param_names = ["param_1", "param_2"]
         output_dir = str(temp_directory) if save_to_file else None
 
-        with patch('matplotlib.pyplot.show') as mock_show:
+        with patch("matplotlib.pyplot.show") as mock_show:
             viz.plot_prediction_accuracy(
                 true_values,
                 predicted_values,
                 param_names,
                 title="Test Accuracy",
                 output_dir=output_dir,
-                filename="test_accuracy.png"
+                filename="test_accuracy.png",
             )
 
         if save_to_file:
@@ -116,21 +110,19 @@ class TestVisualizer:
 
         mock_study.trials = mock_trials
 
-        with patch('matplotlib.pyplot.show'):
+        with patch("matplotlib.pyplot.show"):
             viz.plot_optimization_history(
                 mock_study,
                 title="Test History",
                 output_dir=str(temp_directory),
-                filename="test_history.png"
+                filename="test_history.png",
             )
 
         expected_file = temp_directory / "test_history.png"
         assert expected_file.exists()
 
     def test_plot_regression_model_performance(
-        self,
-        sample_float_array: FloatArray,
-        temp_directory: Path
+        self, sample_float_array: FloatArray, temp_directory: Path
     ) -> None:
         """Test regression model performance plotting."""
         viz = Visualizer()
@@ -146,7 +138,7 @@ class TestVisualizer:
 
         param_names = ["param_1", "param_2"]
 
-        with patch('matplotlib.pyplot.show'):
+        with patch("matplotlib.pyplot.show"):
             viz.plot_regression_model_performance(
                 mock_model,
                 train_input,
@@ -156,7 +148,7 @@ class TestVisualizer:
                 param_names,
                 title="Test Performance",
                 output_dir=str(temp_directory),
-                filename="test_performance.png"
+                filename="test_performance.png",
             )
 
         expected_file = temp_directory / "test_performance.png"
@@ -173,13 +165,13 @@ class TestVisualizer:
         macro_params = np.array([[1.0], [2.0], [3.0]], dtype=np.float64)
         micro_params = np.array([[0.5], [1.0], [1.5]], dtype=np.float64)
 
-        with patch('matplotlib.pyplot.show'):
+        with patch("matplotlib.pyplot.show"):
             viz.plot_parameter_relationship(
                 macro_params,
                 micro_params,
                 ["macro_1"],
                 ["micro_1"],
-                output_dir=str(temp_directory)
+                output_dir=str(temp_directory),
             )
 
         expected_file = temp_directory / "parameter_relationships.png"
@@ -195,14 +187,14 @@ class TestVisualizer:
         macro_params = np.array([[1.0], [2.0]], dtype=np.float64)
         micro_params = np.array([[0.5], [1.0]], dtype=np.float64)
 
-        with patch('matplotlib.pyplot.show'):
+        with patch("matplotlib.pyplot.show"):
             viz.plot_parameter_relationship(
                 macro_params,
                 micro_params,
                 ["macro_1"],
                 ["micro_1"],
                 output_dir=str(nested_dir),
-                filename="test.png"
+                filename="test.png",
             )
 
         expected_file = nested_dir / "test.png"

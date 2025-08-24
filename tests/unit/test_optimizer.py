@@ -53,12 +53,16 @@ class TestOptunaOptimizer:
             optimizer = OptunaOptimizer(storage=storage, seed=42)
 
             # Create new study
-            study, is_existing = optimizer.create_or_load_study("test_study", load_if_exists=False)
+            study, is_existing = optimizer.create_or_load_study(
+                "test_study", load_if_exists=False
+            )
             assert not is_existing
             assert study.study_name == "test_study"
 
             # Load existing study
-            study2, is_existing2 = optimizer.create_or_load_study("test_study", load_if_exists=True)
+            study2, is_existing2 = optimizer.create_or_load_study(
+                "test_study", load_if_exists=True
+            )
             assert is_existing2
             assert study2.study_name == "test_study"
 
@@ -84,9 +88,7 @@ class TestOptunaOptimizer:
         study = optuna.create_study()
         trial = study.ask()
 
-        invalid_config = {
-            "param1": {"type": "invalid", "low": 0, "high": 1}
-        }
+        invalid_config = {"param1": {"type": "invalid", "low": 0, "high": 1}}
 
         with pytest.raises(ValueError, match="Unknown parameter type 'invalid'"):
             optimizer.suggest_parameters(trial, invalid_config)
@@ -102,9 +104,7 @@ class TestOptunaOptimizer:
                 # Simple quadratic objective
                 return sum(v**2 for v in params.values())
 
-            study = optimizer.optimize_batch(
-                objective, "test_optimization", n_trials=5
-            )
+            study = optimizer.optimize_batch(objective, "test_optimization", n_trials=5)
 
             assert len(study.trials) == 5
             assert study.best_trial is not None

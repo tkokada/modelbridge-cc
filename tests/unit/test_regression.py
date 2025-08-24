@@ -1,6 +1,5 @@
 """Unit tests for regression models."""
 
-
 import numpy as np
 import pytest
 
@@ -25,14 +24,14 @@ class TestLinearRegressionModel:
         model = LinearRegressionModel()
 
         # Use first 2 columns as input, last 2 as target
-        X = sample_float_array[:, :2]
+        x = sample_float_array[:, :2]
         y = sample_float_array[:, 2:]
 
         # Fit model
-        model.fit(X, y)
+        model.fit(x, y)
 
         # Make predictions
-        predictions = model.predict(X)
+        predictions = model.predict(x)
         assert predictions.shape == y.shape
         assert isinstance(predictions, np.ndarray)
 
@@ -56,11 +55,11 @@ class TestPolynomialRegressionModel:
         """Test fitting and prediction."""
         model = PolynomialRegressionModel(degree=2)
 
-        X = sample_float_array[:, :2]
+        x = sample_float_array[:, :2]
         y = sample_float_array[:, 2:]
 
-        model.fit(X, y)
-        predictions = model.predict(X)
+        model.fit(x, y)
+        predictions = model.predict(x)
 
         assert predictions.shape == y.shape
         assert isinstance(predictions, np.ndarray)
@@ -89,25 +88,20 @@ class TestRegressionModel:
             RegressionModel("invalid")
 
     def test_fit_with_param_list(
-        self,
-        sample_param_list: ParamList,
-        sample_float_array: FloatArray
+        self, sample_param_list: ParamList, sample_float_array: FloatArray
     ) -> None:
         """Test fitting with parameter list input."""
         model = RegressionModel("linear")
 
         # Use param list as macro params, array as micro params
         micro_params = sample_float_array[:, 2:].tolist()
-        micro_param_list = [
-            {"p_1": row[0], "p_2": row[1]}
-            for row in micro_params
-        ]
+        micro_param_list = [{"p_1": row[0], "p_2": row[1]} for row in micro_params]
 
         model.fit(
             sample_param_list,
             micro_param_list,
             macro_param_names=["x_1", "x_2", "p_1", "p_2"],
-            micro_param_names=["p_1", "p_2"]
+            micro_param_names=["p_1", "p_2"],
         )
 
         assert model._is_fitted
@@ -116,10 +110,10 @@ class TestRegressionModel:
         """Test fitting with numpy array input."""
         model = RegressionModel("linear")
 
-        X = sample_float_array[:, :2]
+        x = sample_float_array[:, :2]
         y = sample_float_array[:, 2:]
 
-        model.fit(X, y)
+        model.fit(x, y)
         assert model._is_fitted
 
     def test_predict_before_fit(self, sample_float_array: FloatArray) -> None:
@@ -133,11 +127,11 @@ class TestRegressionModel:
         """Test prediction after fitting."""
         model = RegressionModel("linear")
 
-        X = sample_float_array[:, :2]
+        x = sample_float_array[:, :2]
         y = sample_float_array[:, 2:]
 
-        model.fit(X, y)
-        predictions = model.predict(X)
+        model.fit(x, y)
+        predictions = model.predict(x)
 
         assert predictions.shape == y.shape
         assert isinstance(predictions, np.ndarray)
@@ -157,7 +151,9 @@ class TestRegressionModel:
         assert "r2" in metrics
         assert all(isinstance(v, float) for v in metrics.values())
 
-    def test_convert_to_array_with_param_list(self, sample_param_list: ParamList) -> None:
+    def test_convert_to_array_with_param_list(
+        self, sample_param_list: ParamList
+    ) -> None:
         """Test conversion from parameter list to array."""
         model = RegressionModel("linear")
 
@@ -188,7 +184,7 @@ class TestRegressionModel:
 
 @pytest.mark.skipif(
     condition=True,  # Skip GPy tests by default since it's optional
-    reason="GPy is optional dependency"
+    reason="GPy is optional dependency",
 )
 class TestGaussianProcessModel:
     """Test cases for GaussianProcessModel (requires GPy)."""

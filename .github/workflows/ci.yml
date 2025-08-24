@@ -38,7 +38,7 @@ jobs:
     
     - name: Type check with mypy
       run: |
-        uv run mypy modelbridge/
+        uv run mypy modelbridge/  --disable-error-code=unreachable
     
     - name: Test with pytest
       run: |

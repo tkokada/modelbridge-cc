@@ -17,10 +17,7 @@ class TestDataManager:
         dm = DataManager()
         assert dm is not None
 
-    def test_convert_params_to_array(
-        self,
-        sample_param_list: ParamList
-    ) -> None:
+    def test_convert_params_to_array(self, sample_param_list: ParamList) -> None:
         """Test conversion from parameter list to numpy array."""
         dm = DataManager()
         param_names = ["x_1", "x_2", "p_1", "p_2"]
@@ -51,9 +48,7 @@ class TestDataManager:
         assert first_params["x_2"] == 2.0
 
     def test_save_and_load_params_csv(
-        self,
-        sample_param_list: ParamList,
-        temp_directory: Path
+        self, sample_param_list: ParamList, temp_directory: Path
     ) -> None:
         """Test saving and loading parameter CSV files."""
         dm = DataManager()
@@ -85,9 +80,7 @@ class TestDataManager:
             dm.save_params_csv([], csv_file)
 
     def test_save_and_load_array_csv(
-        self,
-        sample_float_array: FloatArray,
-        temp_directory: Path
+        self, sample_float_array: FloatArray, temp_directory: Path
     ) -> None:
         """Test saving and loading numpy arrays as CSV."""
         dm = DataManager()
@@ -106,9 +99,7 @@ class TestDataManager:
         np.testing.assert_array_almost_equal(loaded_array, sample_float_array)
 
     def test_save_array_csv_wrong_columns(
-        self,
-        sample_float_array: FloatArray,
-        temp_directory: Path
+        self, sample_float_array: FloatArray, temp_directory: Path
     ) -> None:
         """Test saving array with wrong number of column names."""
         dm = DataManager()
@@ -181,7 +172,7 @@ class TestDataManager:
             min_value=-5.0,
             num_samples=10,
             sampler="uniform",
-            seed=42
+            seed=42,
         )
 
         assert dataset.shape == (10, 3)
@@ -211,6 +202,5 @@ class TestDataManager:
 
         with pytest.raises(ValueError, match="Unknown sampler: invalid"):
             dm.generate_variable_dataset(
-                dim=2, max_value=1.0, min_value=-1.0,
-                num_samples=5, sampler="invalid"
+                dim=2, max_value=1.0, min_value=-1.0, num_samples=5, sampler="invalid"
             )
