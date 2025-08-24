@@ -1,28 +1,75 @@
 repos:
+  # Python built-in hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
+      # Basic file checks
       - id: trailing-whitespace
       - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-added-large-files
       - id: check-merge-conflict
+      - id: check-case-conflict
+
+      # Python-specific checks
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-docstring-first
       - id: debug-statements
 
+      # JSON/YAML/TOML validation
+      - id: check-json
+      - id: check-yaml
+      - id: check-toml
+
+      # File size and encoding
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: mixed-line-ending
+      - id: fix-encoding-pragma
+        args: [--remove]
+
+  # Ruff linter and formatter (latest version)
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.6
+    rev: v0.8.3
     hooks:
       # Run the linter
       - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
+        args: [--fix]
       # Run the formatter
       - id: ruff-format
 
+  # mypy type checking (latest version)
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.7.1
+    rev: v1.13.0
     hooks:
       - id: mypy
+        args: [--disable-error-code=unreachable, --exclude=.*\.pyi$]
+        files: ^modelbridge/.*\.py$
         additional_dependencies:
           - types-toml
-        args: [--config-file=pyproject.toml]
+          - numpy
+          - pandas-stubs
+
+  # Security checks
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.10
+    hooks:
+      - id: bandit
+        args: [--skip, "B101"]  # Skip assert_used test
         files: ^modelbridge/
+
+# Global configuration
+default_stages: [pre-commit]
+fail_fast: false
+
+# Configuration for CI
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false
