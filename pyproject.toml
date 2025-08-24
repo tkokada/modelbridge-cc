@@ -221,5 +221,5 @@ directory = "outputs/reports/htmlcov"
 [tool.coverage.xml]
 output = "coverage.xml"
 
-[tool.uv]
+[tool.uv.pip]
 only-binary = ["scipy", "numpy", "pandas", "scikit-learn"]
