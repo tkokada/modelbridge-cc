@@ -18,7 +18,12 @@
       "Bash(uv run:*)",
       "Bash(git add:*)",
       "Bash(grep:*)",
-      "Bash(uv build:*)"
+      "Bash(uv build:*)",
+      "Bash(timeout 60 uv run:*)",
+      "Bash(timeout 120 uv run:*)",
+      "Read(//Users/tkokada/Dropbox/Documents/Programs/**)",
+      "Bash(java:*)",
+      "Bash(timeout 180 uv run python hpopt_data_assimilation.py)"
     ],
     "deny": [
       "Bash(rm:*)",
@@ -28,6 +33,9 @@
     "ask": [
       "Bash(git commit:*)",
       "Bash(git push:*)"
+    ],
+    "additionalDirectories": [
+      "/Users/tkokada/Dropbox/Documents/Programs/example"
     ]
   }
 }

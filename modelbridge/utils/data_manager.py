@@ -29,6 +29,7 @@ class DataManager:
 
         Returns:
             Numpy array with shape (n_samples, n_params)
+
         """
         return np.array(
             [[param_dict[name] for name in param_names] for param_dict in params_list]
@@ -39,12 +40,26 @@ class DataManager:
     ) -> ParamList:
         """Convert numpy array to list of parameter dictionaries.
 
+        Transforms a structured numpy array into a list of parameter dictionaries
+        for easier manipulation and analysis.
+
         Args:
-            params_array: Numpy array with shape (n_samples, n_params)
-            param_names: List of parameter names
+            params_array (FloatArray): Numpy array with shape (n_samples, n_params)
+                containing parameter values as floating point numbers.
+            param_names (list[str]): List of parameter names corresponding to array
+                columns, used as dictionary keys.
 
         Returns:
-            List of parameter dictionaries
+            list[ParamDict]: List of parameter dictionaries where each dictionary
+                contains parameter names as keys and values from the array.
+
+        Example:
+            >>> array = np.array([[1.0, 2.0], [3.0, 4.0]])
+            >>> names = ["x", "y"]
+            >>> result = data_manager.convert_array_to_params(array, names)
+            >>> result
+            [{"x": 1.0, "y": 2.0}, {"x": 3.0, "y": 4.0}]
+
         """
         return [
             {name: float(value) for name, value in zip(param_names, row, strict=False)}
@@ -63,6 +78,7 @@ class DataManager:
             params_list: List of parameter dictionaries
             file_path: Path to save CSV file
             param_names: Parameter names (if None, uses keys from first dict)
+
         """
         if not params_list:
             raise ValueError("Empty parameter list")
@@ -87,6 +103,7 @@ class DataManager:
             array: Numpy array to save
             file_path: Path to save CSV file
             column_names: Column names for CSV
+
         """
         if array.shape[1] != len(column_names):
             # Python 3.12: Enhanced f-string with debugging info
@@ -109,9 +126,10 @@ class DataManager:
 
         Returns:
             List of parameter dictionaries
+
         """
         df = pd.read_csv(Path(file_path))
-        return [dict(row) for row in df.to_dict("records")]
+        return [dict(row) for row in df.to_dict("records")]  # type: ignore[arg-type]
 
     def load_array_csv(self, file_path: FilePath) -> NumPyArray:
         """Load numpy array from CSV file.
@@ -121,6 +139,7 @@ class DataManager:
 
         Returns:
             Numpy array
+
         """
         df = pd.read_csv(Path(file_path))
         return np.asarray(df.values, dtype=np.float64)
@@ -136,6 +155,7 @@ class DataManager:
 
         Returns:
             Tuple of (n_train, n_test)
+
         """
         n_train = int(total_datasets * train_ratio)
         n_test = total_datasets - n_train
@@ -154,6 +174,7 @@ class DataManager:
 
         Returns:
             Scaled parameters
+
         """
         if isinstance(params, dict):
             # Handle single dictionary case
@@ -213,6 +234,7 @@ class DataManager:
 
         Returns:
             Generated dataset with shape (num_samples, dim)
+
         """
         if seed is not None:
             np.random.seed(seed)

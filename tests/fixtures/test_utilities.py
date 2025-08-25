@@ -19,6 +19,7 @@ class MockObjectiveFunction:
         Args:
             function_type: Type of function ("quadratic", "linear", "sine")
             noise_level: Amount of noise to add to function output
+
         """
         self.function_type = function_type
         self.noise_level = noise_level
@@ -60,6 +61,7 @@ class MockMacroObjectiveFunction:
 
         Args:
             approximation_type: Type of approximation ("linear", "constant")
+
         """
         self.approximation_type = approximation_type
         self.call_count = 0

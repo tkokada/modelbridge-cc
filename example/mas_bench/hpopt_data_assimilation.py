@@ -22,6 +22,7 @@ class MASBenchSimulator:
 
         Args:
             jar_path: Path to MAS-Bench.jar file
+
         """
         self.jar_path = jar_path
 
@@ -33,6 +34,7 @@ class MASBenchSimulator:
 
         Returns:
             Tuple of (naive_agents, rational_agents, ruby_agents)
+
         """
         script_path = f"masbench-resources/Dataset/{model}/agent_size.sh"
         if not os.path.exists(script_path):
@@ -55,6 +57,7 @@ class MASBenchSimulator:
             model: Model name
             result_path: Path to store results
             input_csv: Path to input CSV file
+
         """
         try:
             subprocess.run(
@@ -116,6 +119,7 @@ class MASBenchSimulator:
 
         Returns:
             Fitness score (AllError)
+
         """
         os.makedirs(output_path, exist_ok=True)
         source_path = os.path.join(result_path, "analyze", "Fitness.csv")
@@ -150,6 +154,7 @@ class MASBenchBridge:
 
         Args:
             model: Model name for simulation
+
         """
         self.model = model
         self.simulator = MASBenchSimulator()
@@ -369,7 +374,6 @@ class MASBenchBridge:
         seed: int = 42,
     ) -> dict[str, Any]:
         """Run complete data assimilation pipeline."""
-
         # Phase 1: Create training data (micro model optimization)
         print("Phase 1: Creating training data...")
         micro_model = f"FL{function_id}"

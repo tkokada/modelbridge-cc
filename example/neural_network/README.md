@@ -12,35 +12,65 @@ This example demonstrates model bridging between different neural network archit
 ## Files
 
 - `mnist_sklearn_bridge.py` - Main example using sklearn MLPClassifier (recommended)
-- `neural_models.py` - PyTorch implementation (requires PyTorch installation)
+- `mnist_model_bridge.py` - PyTorch implementation with CNN/MLP comparison
+- `neural_models.py` - PyTorch neural network implementations
 - `config_mnist.toml` - Configuration file for PyTorch version
 - `README.md` - This documentation
 
-## Quick Start (sklearn version)
+## Quick Start
 
+### sklearn Implementation (Recommended)
 ```bash
-# Run the sklearn-based example (fast, no extra dependencies)
-cd example/neural_network
-python mnist_sklearn_bridge.py
+# Individual model demonstration
+uv run python mnist_sklearn_bridge.py --demo
 
-# Run individual model demo
-python mnist_sklearn_bridge.py --demo
-
-# Customize parameters
-python mnist_sklearn_bridge.py --subset-size 500 --n-train 2 --n-test 1
+# Full model bridge example
+uv run python mnist_sklearn_bridge.py --subset-size 500 --n-train 2 --n-test 1
 ```
 
-## PyTorch Version (Optional)
-
+### PyTorch Implementation
 ```bash
-# Install PyTorch dependencies
+# Individual model demonstration (CNN vs MLP)
+uv run python mnist_model_bridge.py --demo
+
+# Full model bridge example
+uv run python mnist_model_bridge.py --subset-size 200 --n-train 2 --n-test 1
+```
+
+### Using Makefile (from project root)
+```bash
+make run-neural-demo       # sklearn demo
+make run-neural-example    # sklearn full example
+make run-neural-pytorch    # PyTorch full example
+```
+
+## PyTorch Implementation Details
+
+The PyTorch version (`mnist_model_bridge.py`) offers:
+
+- **CNN Micro Model**: Convolutional neural network with dropout and configurable layers
+- **MLP Macro Model**: Multi-layer perceptron with variable architecture
+- **Advanced Features**: Dropout optimization, learning rate tuning, GPU support
+- **Realistic Training**: Actual neural network training with PyTorch
+
+### Installation
+```bash
+# Install with PyTorch support
 uv pip install -e ".[examples]"
+# or for all dependencies
+uv pip install -e ".[all]"
+```
 
-# Test PyTorch models
-python neural_models.py
+### Usage Options
+```bash
+# Quick demo
+uv run python mnist_model_bridge.py --demo
 
-# Run PyTorch model bridge
-python mnist_model_bridge.py --demo
+# Fast example
+uv run python mnist_model_bridge.py --subset-size 200 --n-train 2 --n-test 1
+
+# Thorough optimization (slower)
+uv run python mnist_model_bridge.py --subset-size 1000 --n-train 3 --n-test 2 --slow
 ```
 
 ## Model Architecture

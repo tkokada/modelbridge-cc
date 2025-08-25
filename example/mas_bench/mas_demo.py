@@ -25,6 +25,7 @@ class MockMASBenchSimulator:
 
         Returns:
             Total travel time (objective to minimize)
+
         """
         self.simulation_count += 1
 
@@ -170,7 +171,7 @@ def main():
 
     print("\\n🎯 Traffic Data Assimilation Results:")
     print(f"⏱️  Total execution time: {elapsed_time:.2f} seconds")
-    print(f"🔄 Simulations run: ~{(4+2) * (10+10)} mock traffic scenarios")
+    print(f"🔄 Simulations run: ~{(4 + 2) * (10 + 10)} mock traffic scenarios")
     print("📊 Parameter prediction quality:")
     print(f"   MSE: {metrics['mse']:.6f}")
     print(f"   MAE: {metrics['mae']:.6f}")

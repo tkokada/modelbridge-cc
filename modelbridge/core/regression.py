@@ -136,6 +136,7 @@ class RegressionModel:
         Args:
             model_type: Type of regression model
             **kwargs: Additional arguments for the specific model
+
         """
         if model_type not in self.SUPPORTED_MODELS:
             raise ValueError(
@@ -159,11 +160,23 @@ class RegressionModel:
     ) -> None:
         """Fit regression model to map macro to micro parameters.
 
+        Trains the regression model to learn the mapping from macro model parameters
+        to micro model parameters using the provided training data.
+
         Args:
-            macro_params: Macro model parameters (input)
-            micro_params: Micro model parameters (output)
-            macro_param_names: Names of macro parameters (for dict input)
-            micro_param_names: Names of micro parameters (for dict input)
+            macro_params (ParamList | FloatArray): Macro model parameters as input data.
+                Can be list of parameter dictionaries or numpy array.
+            micro_params (ParamList | FloatArray): Micro model parameters as target data.
+                Can be list of parameter dictionaries or numpy array.
+            macro_param_names (list[str] | None, optional): Names of macro parameters in
+                specific order when input is list of dictionaries. Defaults to None.
+            micro_param_names (list[str] | None, optional): Names of micro parameters in
+                specific order when input is list of dictionaries. Defaults to None.
+
+        Raises:
+            ValueError: If parameter names are required but not provided, or if input
+                data shapes are incompatible.
+
         """
         input_data = self._convert_to_array(macro_params, macro_param_names)
         target_data = self._convert_to_array(micro_params, micro_param_names)
@@ -184,6 +197,7 @@ class RegressionModel:
 
         Returns:
             Predicted micro parameters
+
         """
         if not self._is_fitted:
             raise ValueError("Model has not been fitted yet")
@@ -202,6 +216,7 @@ class RegressionModel:
 
         Returns:
             Dictionary of evaluation metrics
+
         """
         import warnings
 

@@ -1,6 +1,6 @@
 # Makefile for ModelBridge development
 
-.PHONY: help install install-dev lint format type-check test test-cov clean build
+.PHONY: help install install-dev lint format type-check test test-cov clean build run-simple-example run-neural-demo run-neural-example run-neural-pytorch run-mas-example run-demo pre-commit-install pre-commit-run pre-commit-update setup-dev
 
 # Default target
 help:
@@ -26,8 +26,9 @@ help:
 	@echo "  clean-outputs  - Clean all output files"
 	@echo "  clean-examples - Clean example outputs only"
 	@echo "  clean-reports  - Clean development reports only"
-	@echo "  run-neural-demo     - Run neural network demo"
-	@echo "  run-neural-example  - Run neural network model bridge"
+	@echo "  run-neural-demo     - Run neural network demo (sklearn)"
+	@echo "  run-neural-example  - Run neural network model bridge (sklearn)"
+	@echo "  run-neural-pytorch  - Run neural network model bridge (PyTorch)"
 
 # Installation
 install:
@@ -53,7 +54,7 @@ format-check:
 	uv run ruff format --check .
 
 type-check:
-	uv run mypy modelbridge/ --disable-error-code=unreachable
+	uv run mypy modelbridge/ --disable-error-code=unreachable --disable-error-code=unused-ignore
 
 # Testing
 test:
@@ -139,16 +140,19 @@ setup-dev:
 
 # Run examples
 run-simple-example:
-	cd example/simple_benchmark && python hpopt_benchmark_refactored.py -c config_sample.toml
+	cd example/simple_benchmark && uv run python simple_example.py
 
 run-neural-demo:
-	cd example/neural_network && python mnist_sklearn_bridge.py --demo
+	cd example/neural_network && uv run python mnist_sklearn_bridge.py --demo
 
 run-neural-example:
-	cd example/neural_network && python mnist_sklearn_bridge.py --subset-size 500 --n-train 2 --n-test 1
+	cd example/neural_network && uv run python mnist_sklearn_bridge.py --subset-size 500 --n-train 2 --n-test 1
+
+run-neural-pytorch:
+	cd example/neural_network && uv run python mnist_model_bridge.py --subset-size 200 --n-train 2 --n-test 1
 
 run-mas-example:
-	cd example/mas_bench && python hpopt_data_assimilation_refactored.py
+	cd example/mas_bench && uv run python mas_demo.py
 
 run-demo:
 	python example_usage.py

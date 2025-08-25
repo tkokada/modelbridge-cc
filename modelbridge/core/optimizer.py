@@ -24,20 +24,30 @@ class OptunaOptimizer:
         sampler: OptimizerSamplerType | BaseSampler | None = None,
         seed: int | None = None,
     ):
-        """Initialize optimizer.
+        """Initialize Optuna optimizer wrapper.
+
+        Sets up an Optuna optimization study with configurable storage, direction,
+        sampler algorithm, and random seed for reproducible results.
 
         Args:
-            storage: Storage URI for Optuna study
-            direction: Optimization direction ("minimize" or "maximize")
-            sampler: Sampler name ("random", "tpe", "cmaes") or Sampler instance
-            seed: Random seed for reproducibility
+            storage (str | None, optional): Storage URI for Optuna study persistence.
+                Can be SQLite path like "sqlite:///study.db" or None for in-memory.
+                Defaults to None.
+            direction (OptimizationDirection, optional): Optimization direction, either
+                "minimize" or "maximize". Defaults to "minimize".
+            sampler (OptimizerSamplerType | BaseSampler | None, optional): Optimization
+                sampler algorithm. Can be string name ("random", "tpe", "cmaes") or
+                Optuna sampler instance. Defaults to None (uses TPE).
+            seed (int | None, optional): Random seed for reproducible optimization
+                results. If None, uses random initialization. Defaults to None.
+
         """
         self.storage = storage or "sqlite:///optuna.db"
         self.direction = direction
         self.seed = seed
 
         if isinstance(sampler, str):
-            self.sampler = self._create_sampler(sampler, seed)
+            self.sampler = self._create_sampler(sampler, seed)  # type: ignore[arg-type]
         elif sampler is None:
             self.sampler = self._create_sampler("tpe", seed)
         else:
@@ -73,6 +83,7 @@ class OptunaOptimizer:
 
         Returns:
             Tuple of (study, is_existing)
+
         """
         try:
             if load_if_exists:
@@ -107,6 +118,7 @@ class OptunaOptimizer:
 
         Returns:
             Completed study
+
         """
         study, is_existing = self.create_or_load_study(study_name, load_if_exists)
 
@@ -128,6 +140,7 @@ class OptunaOptimizer:
 
         Returns:
             Dictionary of suggested parameters
+
         """
         params: ParamDict = {}
         for param_name, config in param_config.items():
@@ -159,9 +172,10 @@ class OptunaOptimizer:
 
         Returns:
             Best parameters dictionary
+
         """
         study = optuna.load_study(study_name=study_name, storage=self.storage)
-        return study.best_trial.params
+        return study.best_trial.params  # type: ignore[no-any-return]
 
     def get_all_completed_params(self, study_name: str) -> list[ParamDict]:
         """Get all completed trial parameters.
@@ -171,6 +185,7 @@ class OptunaOptimizer:
 
         Returns:
             List of parameter dictionaries
+
         """
         study = optuna.load_study(study_name=study_name, storage=self.storage)
         return [

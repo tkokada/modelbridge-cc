@@ -21,7 +21,38 @@ from .regression import RegressionModel
 
 
 class ModelBridge:
-    """Main class for model bridging workflow."""
+    """Main class for model bridging workflow.
+
+    Coordinates the complete model bridging process including training phase optimization,
+    testing phase evaluation, and regression model training to map macro parameters
+    to micro parameters. This is the primary interface for ModelBridge functionality.
+
+    The workflow consists of:
+    1. Training phase: Optimize both micro and macro models on multiple datasets
+    2. Regression training: Learn mapping from macro to micro parameters
+    3. Testing phase: Evaluate prediction accuracy on new datasets
+    4. Visualization: Generate plots and analysis of results
+
+    Attributes:
+        micro_objective (ObjectiveFunctionProtocol): Micro model objective function.
+        macro_objective (MacroObjectiveFunctionProtocol): Macro model objective function.
+        optimizer (OptunaOptimizer): Optuna optimization wrapper.
+        regression (RegressionModel): Regression model for parameter mapping.
+        train_micro_params (ParamList): Training micro parameters.
+        train_macro_params (ParamList): Training macro parameters.
+        test_micro_params (ParamList): Test micro parameters.
+        test_macro_params (ParamList): Test macro parameters.
+        predicted_micro_params (FloatArray | None): Predicted micro parameters.
+
+    Example:
+        >>> bridge = ModelBridge(
+        ...     micro_objective=complex_function,
+        ...     macro_objective=simple_function,
+        ...     micro_param_config=config,
+        ...     macro_param_config=config
+        ... )
+        >>> metrics = bridge.run_full_pipeline(n_train=5, n_test=3)
+    """
 
     def __init__(
         self,
@@ -36,13 +67,21 @@ class ModelBridge:
         """Initialize ModelBridge.
 
         Args:
-            micro_objective: Micro model objective function
-            macro_objective: Macro model objective function (takes params and target)
-            micro_param_config: Micro parameter configuration
-            macro_param_config: Macro parameter configuration
-            regression_type: Type of regression model to use
-            optimizer_config: Configuration for optimizer
-            regression_config: Configuration for regression model
+            micro_objective (ObjectiveFunctionProtocol): Micro model objective function that takes
+                parameters and returns a float objective value.
+            macro_objective (MacroObjectiveFunctionProtocol): Macro model objective function that
+                takes parameters and a target value, returning a float objective value.
+            micro_param_config (ParamConfig): Parameter configuration dictionary for micro model
+                with parameter names as keys and type/range specs as values.
+            macro_param_config (ParamConfig): Parameter configuration dictionary for macro model
+                with parameter names as keys and type/range specs as values.
+            regression_type (RegressionModelType, optional): Type of regression model to use for
+                parameter mapping. Defaults to "polynomial".
+            optimizer_config (dict[str, Any] | None, optional): Configuration dictionary for
+                Optuna optimizer including storage, sampler, and seed settings. Defaults to None.
+            regression_config (dict[str, Any] | None, optional): Configuration dictionary for
+                regression model with model-specific parameters. Defaults to None.
+
         """
         self.micro_objective = micro_objective
         self.macro_objective = macro_objective
@@ -79,11 +118,21 @@ class ModelBridge:
     ) -> None:
         """Execute training phase of model bridging.
 
+        This phase optimizes both micro and macro models on multiple training datasets,
+        then trains a regression model to map macro parameters to micro parameters.
+
         Args:
-            n_train: Number of training datasets
-            micro_trials_per_dataset: Number of trials for micro optimization
-            macro_trials_per_dataset: Number of trials for macro optimization
-            study_prefix: Prefix for study names
+            n_train (int): Number of training datasets to generate and optimize.
+            micro_trials_per_dataset (int, optional): Number of optimization trials to run
+                for each micro model dataset. Defaults to 100.
+            macro_trials_per_dataset (int, optional): Number of optimization trials to run
+                for each macro model dataset. Defaults to 100.
+            study_prefix (str, optional): Prefix string for Optuna study names to avoid
+                conflicts between different runs. Defaults to "bridge_train".
+
+        Raises:
+            ValueError: If optimization fails to find valid solutions.
+
         """
         print(f"Starting training phase with {n_train} datasets...")
 
@@ -161,6 +210,7 @@ class ModelBridge:
 
         Returns:
             Evaluation metrics
+
         """
         if not self._is_trained:
             raise ValueError("Must complete training phase before testing")
@@ -256,16 +306,28 @@ class ModelBridge:
     ) -> EvaluationMetrics:
         """Run complete model bridging pipeline.
 
+        Executes the full model bridging workflow including training phase, testing phase,
+        and optional visualization. This is the main entry point for model bridging.
+
         Args:
-            n_train: Number of training datasets
-            n_test: Number of test datasets
-            micro_trials_per_dataset: Number of trials for micro optimization
-            macro_trials_per_dataset: Number of trials for macro optimization
-            visualize: Whether to generate visualizations
-            output_dir: Directory to save results
+            n_train (int): Number of training datasets to generate and optimize on.
+            n_test (int): Number of test datasets for evaluation and validation.
+            micro_trials_per_dataset (int, optional): Number of optimization trials to run
+                for each micro model dataset. Defaults to 100.
+            macro_trials_per_dataset (int, optional): Number of optimization trials to run
+                for each macro model dataset. Defaults to 100.
+            visualize (bool, optional): Whether to generate parameter relationship plots
+                and prediction accuracy visualizations. Defaults to True.
+            output_dir (str | None, optional): Directory path to save results, plots, and
+                data files. If None, no files are saved. Defaults to None.
 
         Returns:
-            Final evaluation metrics
+            EvaluationMetrics: Dictionary containing evaluation metrics including MSE,
+                MAE, and R² values comparing predicted vs actual micro parameters.
+
+        Raises:
+            ValueError: If training phase has not been completed before testing phase.
+
         """
         # Training phase
         self.train_phase(n_train, micro_trials_per_dataset, macro_trials_per_dataset)

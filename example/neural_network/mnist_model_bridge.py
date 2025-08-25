@@ -19,6 +19,7 @@ class MNISTModelBridge:
         Args:
             subset_size: Size of MNIST subset to use (smaller = faster)
             fast_mode: Whether to use fast training settings
+
         """
         self.subset_size = subset_size
         self.fast_mode = fast_mode
@@ -75,6 +76,12 @@ class MNISTModelBridge:
 
         print(f"Trials per dataset: Micro={micro_trials}, Macro={macro_trials}")
 
+        # Create local output directory
+        from pathlib import Path
+
+        output_dir = Path("pytorch_results")
+        output_dir.mkdir(exist_ok=True)
+
         # Create model bridge
         bridge = ModelBridge(
             micro_objective=self.nn_objectives.micro_objective,
@@ -83,7 +90,7 @@ class MNISTModelBridge:
             macro_param_config=self.macro_param_config,
             regression_type="polynomial",
             optimizer_config={
-                "storage": "sqlite:///outputs/databases/neural_bridge.db",
+                "storage": f"sqlite:///{output_dir}/neural_bridge.db",
                 "direction": "minimize",
                 "sampler": "tpe",
                 "seed": 42,
@@ -101,7 +108,7 @@ class MNISTModelBridge:
                 micro_trials_per_dataset=micro_trials,
                 macro_trials_per_dataset=macro_trials,
                 visualize=True,
-                output_dir="outputs/examples/neural_network_pytorch",
+                output_dir=str(output_dir),
             )
 
             elapsed_time = time.time() - start_time

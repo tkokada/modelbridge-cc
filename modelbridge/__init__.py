@@ -1,5 +1,4 @@
-"""
-ModelBridge Library for Hyperparameter Optimization and Model Bridging
+"""ModelBridge Library for Hyperparameter Optimization and Model Bridging.
 
 This library provides a general framework for model bridging between micro and macro models
 using hyperparameter optimization and regression models.

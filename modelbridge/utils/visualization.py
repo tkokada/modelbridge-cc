@@ -21,6 +21,7 @@ class Visualizer:
         Args:
             figsize: Default figure size
             dpi: Default DPI for plots
+
         """
         self.figsize = figsize
         self.dpi = dpi
@@ -38,14 +39,30 @@ class Visualizer:
     ) -> None:
         """Plot relationships between macro and micro parameters.
 
+        Creates scatter plots showing the relationships between macro model parameters
+        and corresponding micro model parameters, useful for understanding parameter
+        correlations and regression model behavior.
+
         Args:
-            macro_params: Macro parameters array
-            micro_params: Micro parameters array
-            macro_param_names: Names of macro parameters
-            micro_param_names: Names of micro parameters
-            title: Plot title
-            output_dir: Directory to save plot (if None, displays plot)
-            filename: Filename for saved plot
+            macro_params (NumPyArray): Macro parameters array with shape (n_samples, n_macro_params)
+                containing macro model parameter values.
+            micro_params (NumPyArray): Micro parameters array with shape (n_samples, n_micro_params)
+                containing corresponding micro model parameter values.
+            macro_param_names (list[str]): Names of macro parameters for plot labeling,
+                should match the number of columns in macro_params.
+            micro_param_names (list[str]): Names of micro parameters for plot titles,
+                should match the number of columns in micro_params.
+            title (str, optional): Overall title for the plot figure. Defaults to
+                "Parameter Relationships".
+            output_dir (FilePath | None, optional): Directory path to save the plot file.
+                If None, displays the plot interactively. Defaults to None.
+            filename (str, optional): Filename for the saved plot including extension.
+                Defaults to "parameter_relationships.png".
+
+        Note:
+            Creates subplots for each micro parameter showing its relationship with
+            all macro parameters. Automatically handles subplot layout and sizing.
+
         """
         n_micro_params = micro_params.shape[1]
         n_cols = min(3, n_micro_params)
@@ -117,6 +134,7 @@ class Visualizer:
             title: Plot title
             output_dir: Directory to save plot
             filename: Filename for saved plot
+
         """
         n_params = true_values.shape[1]
         n_cols = min(3, n_params)
@@ -214,6 +232,7 @@ class Visualizer:
             title: Plot title
             output_dir: Directory to save plot
             filename: Filename for saved plot
+
         """
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=self.figsize, dpi=self.dpi)
 
@@ -291,6 +310,7 @@ class Visualizer:
             title: Plot title
             output_dir: Directory to save plot
             filename: Filename for saved plot
+
         """
         # Make predictions
         train_pred = regression_model.predict(train_input)

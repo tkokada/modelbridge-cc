@@ -193,9 +193,48 @@ test-results/
 ehthumbs.db
 Thumbs.db
 
-# MAS-Bench specific
-masbench-resources/
-MAS-Bench.jar
+# Example outputs (generated when running examples)
+# Simple benchmark outputs
+example/simple_benchmark/benchmark_results/
+example/simple_benchmark/*_plot.png
+example/simple_benchmark/*.db
+
+# Neural network outputs
+example/neural_network/neural_network_results/
+example/neural_network/pytorch_results/
+example/neural_network/*.db
+
+# MAS-Bench outputs
+example/mas_bench/mas_demo_results/
+example/mas_bench/mas_bench_results/
+example/mas_bench/results/
+example/mas_bench/masbench-resources/
+example/mas_bench/*.db
+example/mas_bench/*.log
+
+# General example patterns
+example/**/outputs/
+example/**/*_results/
+example/**/*results*/
+example/**/*.db
+example/**/*.sqlite*
+example/**/*.png
+example/**/*.csv
+example/**/*.log
+example/**/*.json
+example/**/plots/
+example/**/data/
+example/**/logs/
+example/**/temp/
+example/**/cache/
+
+# Temporary files created during example execution
+example/**/__pycache__/
+example/**/.pytest_cache/
+example/**/test_*.png
+example/**/demo_*.png
+example/**/output_*.csv
+example/**/params_*.csv
 
 # Development and temporary files
 CLAUDE.md
@@ -224,3 +263,6 @@ SECURITY.md
 MANIFEST.in
 .github/ISSUE_TEMPLATE.md
 .github/PULL_REQUEST_TEMPLATE.md
+
+# MAS-Bench jar file
+MAS-Bench.jar

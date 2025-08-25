@@ -24,6 +24,7 @@ def load_toml_config(config_path: FilePath) -> ConfigDict:
     Raises:
         FileNotFoundError: If config file doesn't exist
         ValueError: If config file is invalid
+
     """
     config_path = Path(config_path)
     if not config_path.exists():
@@ -46,6 +47,7 @@ def validate_config(config: ConfigDict, required_keys: ValidationRules) -> None:
 
     Raises:
         ValueError: If required keys are missing or have wrong type
+
     """
     for key, expected_type in required_keys.items():
         if key not in config:
@@ -63,15 +65,38 @@ def create_param_config(
     param_types: list[str],
     param_ranges: list[tuple[float, float]],
 ) -> ParamConfig:
-    """Create parameter configuration dictionary.
+    """Create parameter configuration dictionary for optimization.
+
+    Constructs a parameter configuration dictionary suitable for use with ModelBridge
+    and Optuna optimization, defining parameter names, types, and value ranges.
 
     Args:
-        param_names: List of parameter names
-        param_types: List of parameter types ("float" or "int")
-        param_ranges: List of (min, max) tuples for each parameter
+        param_names (list[str]): List of parameter names to be used as dictionary keys.
+            Each name should be unique and descriptive.
+        param_types (list[str]): List of parameter types, either "float" or "int",
+            corresponding to each parameter name.
+        param_ranges (list[tuple[float, float]]): List of (min_value, max_value) tuples
+            defining the optimization bounds for each parameter.
 
     Returns:
-        Parameter configuration dictionary
+        ParamConfig: Parameter configuration dictionary with parameter names as keys
+            and configuration dictionaries as values containing type and range info.
+
+    Raises:
+        ValueError: If input lists have different lengths or contain invalid parameter types.
+
+    Example:
+        >>> config = create_param_config(
+        ...     param_names=["learning_rate", "batch_size"],
+        ...     param_types=["float", "int"],
+        ...     param_ranges=[(0.001, 0.1), (16, 256)]
+        ... )
+        >>> config
+        {
+            "learning_rate": {"type": "float", "low": 0.001, "high": 0.1},
+            "batch_size": {"type": "int", "low": 16, "high": 256}
+        }
+
     """
     lengths = [len(param_names), len(param_types), len(param_ranges)]
     if not all(length == lengths[0] for length in lengths):

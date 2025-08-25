@@ -3,6 +3,7 @@
 import argparse
 import time
 from typing import Any
+import warnings
 
 import numpy as np
 from sklearn.datasets import fetch_openml
@@ -19,11 +20,21 @@ class SklearnNeuralObjectives:
     """Neural network objectives using sklearn MLPClassifier."""
 
     def __init__(self, subset_size: int = 1000, test_size: float = 0.2):
-        """Initialize with MNIST data.
+        """Initialize neural network objectives with MNIST dataset.
+
+        Loads and preprocesses MNIST handwritten digit data for neural network
+        optimization experiments. Creates standardized train/test splits.
 
         Args:
-            subset_size: Size of dataset subset for fast execution
-            test_size: Fraction of data to use for testing
+            subset_size (int, optional): Size of dataset subset to use for faster
+                execution and development. Defaults to 1000.
+            test_size (float, optional): Fraction of data to reserve for testing,
+                must be between 0.0 and 1.0. Defaults to 0.2.
+
+        Note:
+            Downloads MNIST data automatically on first run. Data is standardized
+            using StandardScaler for better neural network training performance.
+
         """
         print("Loading MNIST data...")
         self.subset_size = subset_size
@@ -149,6 +160,7 @@ class MNISTSklearnBridge:
 
         Args:
             subset_size: Size of MNIST subset for fast execution
+
         """
         self.subset_size = subset_size
 
@@ -192,6 +204,12 @@ class MNISTSklearnBridge:
         print("\n🧠 Starting Neural Network Model Bridge (sklearn)")
         print(f"Training scenarios: {n_train}, Test scenarios: {n_test}")
 
+        # Create local output directory
+        from pathlib import Path
+
+        output_dir = Path("neural_network_results")
+        output_dir.mkdir(exist_ok=True)
+
         # Create model bridge
         bridge = ModelBridge(
             micro_objective=self.nn_objectives.micro_objective,
@@ -200,7 +218,7 @@ class MNISTSklearnBridge:
             macro_param_config=self.macro_param_config,
             regression_type="polynomial",
             optimizer_config={
-                "storage": "sqlite:///outputs/databases/mnist_sklearn_bridge.db",
+                "storage": f"sqlite:///{output_dir}/mnist_sklearn_bridge.db",
                 "direction": "minimize",
                 "sampler": "tpe",
                 "seed": 42,
@@ -217,7 +235,7 @@ class MNISTSklearnBridge:
             micro_trials_per_dataset=4,  # Fast execution
             macro_trials_per_dataset=4,
             visualize=True,
-            output_dir="outputs/examples/neural_network",
+            output_dir=str(output_dir),
         )
 
         elapsed_time = time.time() - start_time
@@ -288,6 +306,9 @@ def demo_individual_models() -> None:
 
 def main() -> None:
     """Main function for neural network model bridge example."""
+    # Suppress sklearn convergence warnings for cleaner output
+    warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
+
     parser = argparse.ArgumentParser(
         description="Neural Network Model Bridge with MNIST (sklearn)"
     )

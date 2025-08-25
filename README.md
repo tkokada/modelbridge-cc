@@ -1,10 +1,5 @@
 # ModelBridge
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Typing: mypy](https://img.shields.io/badge/typing-mypy-blue.svg)](https://mypy.readthedocs.io/)
-
 **A Python framework for hyperparameter optimization and model bridging between micro and macro models**
 
 ModelBridge enables efficient hyperparameter optimization by bridging computationally expensive micro models with fast macro models through regression-based parameter mapping.
@@ -23,9 +18,7 @@ ModelBridge enables efficient hyperparameter optimization by bridging computatio
 ### Installation
 
 ```bash
-# Install from source
-git clone https://github.com/tkokada/modelbridge.git
-cd modelbridge
+# Install the package
 uv pip install -e .
 
 # With development dependencies
@@ -144,15 +137,11 @@ python hpopt_data_assimilation_refactored.py
 ### Setup Development Environment
 
 ```bash
-# Clone repository
-git clone https://github.com/tkokada/modelbridge.git
-cd modelbridge
-
 # Install with development dependencies
 uv pip install -e ".[dev]"
 
-# Set up pre-commit hooks (optional)
-pre-commit install
+# Set up pre-commit hooks
+make pre-commit-install
 ```
 
 ### Development Commands
@@ -196,42 +185,9 @@ make build
 - Optimization history tracking
 - Regression performance metrics
 
-## 🤝 Contributing
+## 🤝 Development
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-### Quick Contribution Guide
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run quality checks (`make check-all`)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🏛️ Citation
-
-If you use ModelBridge in your research, please consider citing:
-
-```bibtex
-@software{modelbridge2024,
-  title={ModelBridge: A Python Framework for Model Bridging and Hyperparameter Optimization},
-  author={ModelBridge Contributors},
-  year={2024},
-  url={https://github.com/tkokada/modelbridge}
-}
-```
-
-## 🆘 Support
-
-- 📖 **Documentation**: [GitHub README](https://github.com/tkokada/modelbridge#readme)
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/tkokada/modelbridge/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/tkokada/modelbridge/discussions)
+For development setup and contribution guidelines, see the project documentation.
 
 ## 🌟 Acknowledgments
 
@@ -239,9 +195,3 @@ If you use ModelBridge in your research, please consider citing:
 - Powered by [scikit-learn](https://scikit-learn.org/) for regression
 - Enhanced with [GPy](https://sheffieldml.github.io/GPy/) for Gaussian Processes
 - Developed with modern Python tooling: [uv](https://docs.astral.sh/uv/), [ruff](https://docs.astral.sh/ruff/), [mypy](https://mypy.readthedocs.io/)
-
----
-
-<div align="center">
-  <strong>Made with ❤️ by the ModelBridge Contributors</strong>
-</div>

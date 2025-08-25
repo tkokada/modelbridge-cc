@@ -292,6 +292,19 @@ def main():
     random.seed(seed)
     np.random.seed(seed)
 
+    # Create local output directory for this example
+    output_dir = Path("benchmark_results")
+    output_dir.mkdir(exist_ok=True)
+
+    # Use local database file
+    config["optuna"]["storage"] = f"sqlite:///{output_dir}/benchmark.db"
+
+    # Update plot paths to local directory
+    for plot_key in ["plot_path_train", "plot_path_test", "plot_path_bridge"]:
+        if plot_key in config.get("plot", {}):
+            filename = Path(config["plot"][plot_key]).name
+            config["plot"][plot_key] = str(output_dir / filename)
+
     # Create benchmark bridge
     benchmark = SimpleBenchmarkBridge(config)
 
@@ -312,9 +325,10 @@ def main():
     def combined_macro_objective(params: dict[str, Any], target: float) -> float:
         """Evaluate macro objective on random dataset."""
         dataset_idx = np.random.randint(0, benchmark.n_train)
-        return benchmark.create_macro_objective(dataset_idx, target, is_train=True)(
-            params
+        macro_objective_func = benchmark.create_macro_objective(
+            dataset_idx, target, is_train=True
         )
+        return macro_objective_func(params, target)
 
     # Create model bridge
     bridge = ModelBridge(
@@ -324,7 +338,7 @@ def main():
         macro_param_config=benchmark.macro_param_config,
         regression_type=config["regression"]["regression_model_name"],
         optimizer_config={
-            "storage": "sqlite:///outputs/databases/simple_benchmark.db",
+            "storage": config["optuna"]["storage"],
             "direction": config["optuna"]["direction"],
             "sampler": config["optuna"]["sampler_name"],
             "seed": seed,
@@ -338,10 +352,10 @@ def main():
     metrics = bridge.run_full_pipeline(
         n_train=config["dataset"]["n_train"],
         n_test=config["dataset"]["n_test"],
-        micro_trials_per_dataset=100,
-        macro_trials_per_dataset=100,
+        micro_trials_per_dataset=20,
+        macro_trials_per_dataset=20,
         visualize=True,
-        output_dir="outputs/examples/simple_benchmark",
+        output_dir=str(output_dir),
     )
 
     print("\\nModel Bridge Results:")
