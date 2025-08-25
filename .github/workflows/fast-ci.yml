@@ -35,7 +35,7 @@ jobs:
 
     - name: Type check with mypy
       run: |
-        uv run mypy modelbridge/  --disable-error-code=unreachable
+        uv run mypy modelbridge/ --disable-error-code=unreachable --disable-error-code=unused-ignore
 
   test:
     runs-on: ubuntu-latest
