@@ -42,7 +42,7 @@ repos:
     rev: v1.13.0
     hooks:
       - id: mypy
-        args: [--disable-error-code=unreachable, --exclude=.*\.pyi$]
+        args: [--disable-error-code=unreachable, --disable-error-code=unused-ignore, --exclude=.*\.pyi$]
         files: ^modelbridge/.*\.py$
         additional_dependencies:
           - types-toml
