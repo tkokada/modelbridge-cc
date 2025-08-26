@@ -94,7 +94,7 @@ def main() -> None:
     mathematical benchmark functions.
 
     Output:
-        Creates visualization plots and CSV data files in ../../outputs/simple_benchmark/
+        Creates visualization plots and CSV data files in simple_benchmark_results/
         directory, including parameter relationships and prediction accuracy analysis.
 
     Example:
@@ -119,7 +119,7 @@ def main() -> None:
     )
 
     # Create output directory
-    output_dir = Path("../../outputs/simple_benchmark")
+    output_dir = Path("simple_benchmark_results")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     print("\\n1. Sphere (micro) → Linear (macro) Bridge")

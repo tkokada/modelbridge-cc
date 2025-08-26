@@ -18,14 +18,28 @@ ModelBridge enables efficient hyperparameter optimization by bridging computatio
 ### Installation
 
 ```bash
-# Install the package
-uv pip install -e .
+# Install the package (editable)
+make install
+# or manually: uv pip install -e .
 
 # With development dependencies
-uv pip install -e ".[dev]"
+make install-dev
+# or manually: uv pip install -e ".[dev]"
 
-# With all optional dependencies
-uv pip install -e ".[all]"
+# With example dependencies (PyTorch for neural_network example)
+make install-examples
+# or manually: uv pip install -e ".[examples]"
+
+# With all dependencies
+make install-all
+# or manually: uv pip install -e ".[all]"
+```
+
+### Alternative: Sync from Lockfile
+```bash
+# Sync dependencies from uv.lock (faster, reproducible)
+make sync-dev
+# or manually: uv sync --extra dev
 ```
 
 ### Basic Usage
@@ -146,25 +160,44 @@ make pre-commit-install
 
 ### Development Commands
 
+#### Code Quality
 | Command | Purpose |
 |---------|---------|
 | `make lint` | Run ruff linter |
 | `make format` | Format code with ruff |
 | `make type-check` | Run mypy type checking |
+| `make check-all` | Run all quality checks |
+
+#### Testing
+| Command | Purpose |
+|---------|---------|
 | `make test` | Run pytest test suite |
 | `make test-cov` | Run tests with coverage |
-| `make check-all` | Run all quality checks |
-| `make build` | Build distribution packages |
+| `make test-unit` | Run unit tests only |
+| `make test-integration` | Run integration tests only |
+
+#### Pre-commit Hooks
+| Command | Purpose |
+|---------|---------|
+| `make pre-commit-install` | Install pre-commit hooks |
+| `make pre-commit-run` | Run pre-commit on all files |
+| `make setup-dev` | Complete development setup |
+
+#### Examples
+| Command | Purpose |
+|---------|---------|
+| `make run-simple-example` | Run simple benchmark |
+| `make run-neural-demo` | Run neural network demo |
+| `make run-neural-pytorch` | Run PyTorch neural example |
+| `make run-mas-example` | Run traffic simulation demo |
 
 ```bash
-# Quality assurance
-make check-all
-
-# Test with coverage
-make test-cov
-
-# Build package
-make build
+# Complete development workflow
+make install-dev         # Install with dev dependencies
+make setup-dev           # Set up pre-commit hooks
+make check-all           # Run all quality checks
+make test-cov            # Test with coverage
+make build               # Build distribution
 ```
 
 ## 📊 Supported Configurations

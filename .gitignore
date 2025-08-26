@@ -204,11 +204,11 @@ example/neural_network/neural_network_results/
 example/neural_network/pytorch_results/
 example/neural_network/*.db
 
-# MAS-Bench outputs
+# MAS-Bench outputs (keep masbench-resources/ but exclude generated files)
 example/mas_bench/mas_demo_results/
 example/mas_bench/mas_bench_results/
 example/mas_bench/results/
-example/mas_bench/masbench-resources/
+example/mas_bench/simple_benchmark_results/
 example/mas_bench/*.db
 example/mas_bench/*.log
 

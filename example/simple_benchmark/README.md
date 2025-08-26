@@ -11,7 +11,8 @@ This example showcases model bridging between different mathematical functions:
 
 ## Files
 
-- `hpopt_benchmark.py` - Main benchmark script using ModelBridge library
+- `simple_example.py` - Simple, reliable example using ModelBridge library (recommended)
+- `hpopt_benchmark.py` - Advanced example with TOML configuration support
 - `config_sample.toml` - Configuration file with optimization parameters
 
 ## Benchmark Functions
@@ -49,20 +50,31 @@ regression_model_name = "polynomial"  # "linear", "polynomial", "gp"
 
 ### Option 1: Simple Example (Recommended)
 ```bash
-# Run simple, reliable example
+# Run simple, reliable example (outputs to local simple_benchmark_results/)
 uv run python simple_example.py
 
 # View results
-ls -la ../../outputs/simple_benchmark/
+ls -la simple_benchmark_results/
 ```
 
 ### Option 2: Advanced Configuration
 ```bash
-# Run with TOML configuration (creates local benchmark_results/ directory)
+# Run advanced version with TOML configuration support
 uv run python hpopt_benchmark.py -c config_sample.toml
 
 # View results
 ls -la benchmark_results/
+```
+
+### Option 3: Using Makefile (from project root)
+```bash
+# Run simple example through Makefile (recommended for automation)
+make run-simple-example
+
+# Run advanced benchmark example
+make run-benchmark-example
+
+# These automatically handle paths and dependencies
 ```
 
 ## Results
@@ -80,8 +92,8 @@ The script generates:
 - `bridge_plot.png` - Prediction accuracy analysis
 
 ### Data Files
-- `benchmark.db` - Optuna optimization database (for advanced config)
-- `sphere_linear.db`, `rastrigin_linear.db` - Individual optimization databases
+- `sphere_linear.db`, `rastrigin_linear.db` - Individual optimization databases (simple example)
+- `benchmark.db` - Optuna optimization database (advanced config)
 - CSV files with parameter datasets and predictions
 
 ## Expected Output
@@ -105,15 +117,18 @@ Results - MSE: 0.6500, MAE: 0.5927, R²: -489.2426
 
 ### Advanced Configuration
 ```
-Running traditional approach...
-Processing training dataset 1/2...
-Running model bridge approach...
-Starting training phase with 2 datasets...
+Running benchmark with config: config_sample.toml
+Function: rastrigin -> sphere bridge
+Starting training phase with 5 datasets...
+Training phase completed!
+Starting test phase with 3 datasets...
+Test phase completed!
 Model Bridge Results:
 MSE: 0.012750
 MAE: 0.104549
 R²: -1.226585
-✅ Simple benchmark completed successfully!
+✅ Benchmark completed successfully!
+Results saved to: benchmark_results/
 ```
 
 ## Performance Notes
@@ -132,4 +147,12 @@ R²: -1.226585
 - **Solution**: Reduce number of optimization trials in config
 
 **Issue**: Database conflicts
-- **Solution**: Delete `outputs/databases/simple_benchmark.db` to start fresh
+- **Solution**:
+  - For simple example: Delete local `simple_benchmark_results/` directory or specific `.db` files
+  - For advanced config: Delete local `benchmark_results/` directory or specific `.db` files
+
+**Issue**: Module import errors
+- **Solution**: Ensure you're in the correct directory and have installed dependencies with `uv pip install -e ".[dev]"` from the project root
+
+**Issue**: Missing dependencies
+- **Solution**: Install with `make install-all` or `uv pip install -e ".[all]"` to get all optional dependencies
